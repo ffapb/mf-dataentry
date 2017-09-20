@@ -1,0 +1,44 @@
+#!/bin/sh
+# Usage: ./importMarketflow.sh
+#        ./importMarketflow.sh --debug
+
+#####################
+# EDIT THIS SECTION #
+#####################
+
+# Connection credentials for FFA Marketflow Lebanon
+export PYMSSQL_LB_SERVER=123.123.123.123
+export PYMSSQL_LB_PORT=4444
+export PYMSSQL_LB_USERNAME=user
+export PYMSSQL_LB_PASSWORD=pass
+export PYMSSQL_LB_DB=dbname1
+
+# Connection credentials for FFA Marketflow Dubai
+export PYMSSQL_AE_SERVER=123.123.123.123
+export PYMSSQL_AE_PORT=4444
+export PYMSSQL_AE_USERNAME=user
+export PYMSSQL_AE_PASSWORD=pass
+export PYMSSQL_AE_DB=dbname1
+
+###############################
+# DO NOT EDIT UNDER THIS LINE #
+###############################
+
+# Getting the source directory of a Bash script from within
+# https://stackoverflow.com/a/337006/4126114
+#DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+DIR=`dirname $0`
+
+# echo "Lebanon"
+$DIR/manage.sh importMarketflow \
+  --host=$PYMSSQL_LB_SERVER --port=$PYMSSQL_LB_PORT \
+  --user=$PYMSSQL_LB_USERNAME --password=$PYMSSQL_LB_PASSWORD \
+  --db=$PYMSSQL_LB_DB --origin="MF Lebanon" \
+  "$@"
+
+# echo "Dubai"
+$DIR/manage.sh importMarketflow \
+  --host=$PYMSSQL_AE_SERVER --port=$PYMSSQL_AE_PORT \
+  --user=$PYMSSQL_AE_USERNAME --password=$PYMSSQL_AE_PASSWORD \
+  --db=$PYMSSQL_AE_DB --origin="MF Dubai" \
+  "$@"

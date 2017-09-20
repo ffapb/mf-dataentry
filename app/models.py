@@ -2,27 +2,33 @@ from __future__ import unicode_literals
 #from django.conf import settings
 from django.db import models
 
-class Currency(models.Model):
-
-    curr = models.CharField(max_length=20)
-    currname = models.CharField(max_length=20)
+class MappableModel(models.Model):
+    code_leb = models.CharField(max_length=20,  unique=True, null=True, blank=True)
+    code_dub = models.CharField(max_length=20,  unique=True, null=True, blank=True)
+    name     = models.CharField(max_length=100, unique=True)
     def __str__(self):
-        return self.curr
+        return self.name
+    class Meta:
+      abstract = True
+
+    # https://stackoverflow.com/a/15534514/4126114
+    def save(self, *args, **kwargs):
+      if self.code_leb == "": self.code_leb = None
+      if self.code_dub == "": self.code_dub = None
+      super(MappableModel, self).save(*args, **kwargs)
+
+class Currency(MappableModel):
     class Meta:
       verbose_name_plural = "currencies"
+      ordering = ('name', 'code_leb', 'code_dub', )
 
-class Nationality(models.Model):
-
-    nationality = models.CharField(max_length=20)
-    nationality_name = models.CharField(max_length=20 )
-    def __str__(self):
-        return self.nationality
+class Nationality(MappableModel):
     class Meta:
       verbose_name_plural = "nationalities"
+      ordering = ('name', 'code_leb', 'code_dub', )
 
 class Security(models.Model):
-
-    code = models.CharField(max_length=20)
+    code = models.CharField(max_length=20, unique=True)
     circular = models.CharField(max_length=200)
     bank_reference = models.CharField(max_length=200)
     designation = models.CharField(max_length=200)
@@ -76,17 +82,14 @@ class SecurityOption(Security):
 
 
 class SecurityBond(Security):
-
     moody = models.CharField(max_length=200)
     fitch = models.CharField(max_length=200)
     s_and_p = models.CharField(max_length=200)
-    
     def __str__(self):
        return self.code
 
 
 class SecurityFutures(Security):
-
     maturity_date = models.CharField(max_length=200)
     underlying_code = models.CharField(max_length=200)
     number_of_units = models.CharField(max_length=200)

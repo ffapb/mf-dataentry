@@ -9,4 +9,3 @@ admin.site.register(models.SecurityOption)
 admin.site.register(models.SecurityBond)
 admin.site.register(models.SecurityFutures)
 
-
