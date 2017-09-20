@@ -99,3 +99,10 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+
+db.sqlite3*
+*.swp
+manage.sh
+importMarketflow.sh
+test_dataentry.txt
