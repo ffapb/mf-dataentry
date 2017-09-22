@@ -61,6 +61,14 @@ class Security(models.Model):
     def __str__(self):
        return self.code
 
+    def export_file(self):
+
+       with MfManager(host=options['host'], port=options['port'], user=options['user'], password=options['password'], db=options['db']) as mfMan:
+  
+    def save(self, *args, **kwargs):
+        super(Security,self).save(*args, **kwargs)
+        self.code = export_file(self.database_path)  
+
 #Multi Table Inheritance
 #https://godjango.com/blog/django-abstract-base-class-multi-table-inheritance/   
 class SecurityShare (Security):
