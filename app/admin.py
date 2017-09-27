@@ -1,5 +1,5 @@
 from django.contrib import admin
-
+from .management.commands._mfManager import MfManager
 from . import models
 
 admin.site.register(models.Currency)

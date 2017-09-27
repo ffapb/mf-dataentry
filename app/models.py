@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 #from django.conf import settings
 from django.db import models
+from .management.commands._mfManager import MfManager
 
 class MappableModel(models.Model):
     code_leb = models.CharField(max_length=20,  unique=True, null=True, blank=True)
@@ -12,7 +13,7 @@ class MappableModel(models.Model):
       abstract = True
 
     # https://stackoverflow.com/a/15534514/4126114
-    def save(self, *args, **kwargs):
+    def save(self, *args, **option):
       if self.code_leb == "": self.code_leb = None
       if self.code_dub == "": self.code_dub = None
       super(MappableModel, self).save(*args, **kwargs)
@@ -61,16 +62,22 @@ class Security(models.Model):
     def __str__(self):
        return self.code
 
-    def export_file(self):
+    def add_arguments(self, parser):
+        parser.add_argument('--debug', action='store_true', dest='debug', default=False, help='show higher verbosity')
+        parser.add_argument('--host',    action='store',      dest='host',  required=True, help='ms sql server for marketflow: host IP or name')
+        parser.add_argument('--port',    action='store',      dest='port',  required=True, help='ms sql server for marketflow: port number')
+        parser.add_argument('--user',    action='store',      dest='user',  required=True, help='ms sql server for marketflow: username')
+        parser.add_argument('--password',action='store',  dest='password',  required=True, help='ms sql server for marketflow: password')
+        parser.add_argument('--db',      action='store',      dest='db',    required=True, help='ms sql server for marketflow: database name')
 
-       with MfManager(host=options['host'], port=options['port'], user=options['user'], password=options['password'], db=options['db']) as mfMan:
-       export= mfMan.insertSecutirty()
 
 
-    def save(self, *args, **kwargs):
-        super(Security,self).save(*args, **kwargs)
-        self.code = export_file(self.database_path)
-          
+    def save(self, *args, **options):
+      super(Security,self).save( *args, **options)  
+      with MfManager(host=options['host'], port=options['port'], user=options['user'], password=options['password'], db=options['db']) as mfMan:
+
+           export= mfMan.insertSecutirty(Security)
+  
 
 #Multi Table Inheritance
 #https://godjango.com/blog/django-abstract-base-class-multi-table-inheritance/   
