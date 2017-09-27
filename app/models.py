@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 #from django.conf import settings
 from django.db import models
 from .management.commands._mfManager import MfManager
+import yaml
 
 class MappableModel(models.Model):
     code_leb = models.CharField(max_length=20,  unique=True, null=True, blank=True)
@@ -13,7 +14,7 @@ class MappableModel(models.Model):
       abstract = True
 
     # https://stackoverflow.com/a/15534514/4126114
-    def save(self, *args, **option):
+    def save(self, *args, **kwargs):
       if self.code_leb == "": self.code_leb = None
       if self.code_dub == "": self.code_dub = None
       super(MappableModel, self).save(*args, **kwargs)
@@ -74,9 +75,10 @@ class Security(models.Model):
 
     def save(self, *args, **options):
       super(Security,self).save( *args, **options)  
-      with MfManager(host=options['host'], port=options['port'], user=options['user'], password=options['password'], db=options['db']) as mfMan:
-
-           export= mfMan.insertSecutirty(Security)
+      credentials = yaml.load(open("credentials.yml",'r'))
+      # credentials = {'host': 'ip', ...
+      with MfManager(host=credentials['host'], port=credentials['port'], user=credentials['user'], password=credentials['password'], db=credentials['db']) as mfMan:
+           export= mfMan.insertSecurity(Security)
   
 
 #Multi Table Inheritance

@@ -106,3 +106,5 @@ db.sqlite3*
 manage.sh
 importMarketflow.sh
 test_dataentry.txt
+
+app/credentials.yml
