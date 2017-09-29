@@ -51,7 +51,7 @@ class Security(models.Model):
     provider_code = models.CharField(max_length=200)
     provider_ratelist = models.CharField(max_length=200)
     monitoring_type = models.CharField(max_length=200)
-    multiplier_fFor_online_prices = models.CharField(max_length=200)
+    multiplier_for_online_prices = models.CharField(max_length=200)
     isin = models.CharField(max_length=200)
     fixing = models.BooleanField(default=False)
     fix1 = models.CharField(max_length=200)
@@ -62,15 +62,6 @@ class Security(models.Model):
 
     def __str__(self):
        return self.code
-
-    def add_arguments(self, parser):
-        parser.add_argument('--debug', action='store_true', dest='debug', default=False, help='show higher verbosity')
-        parser.add_argument('--host',    action='store',      dest='host',  required=True, help='ms sql server for marketflow: host IP or name')
-        parser.add_argument('--port',    action='store',      dest='port',  required=True, help='ms sql server for marketflow: port number')
-        parser.add_argument('--user',    action='store',      dest='user',  required=True, help='ms sql server for marketflow: username')
-        parser.add_argument('--password',action='store',  dest='password',  required=True, help='ms sql server for marketflow: password')
-        parser.add_argument('--db',      action='store',      dest='db',    required=True, help='ms sql server for marketflow: database name')
-
 
 
     def save(self, *args, **options):
