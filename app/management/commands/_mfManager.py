@@ -114,7 +114,6 @@ class MfManager:
     t1.TIT_CHART_ACC = sec.general_ledger
     t1.TIT_REU_COD = sec.provider_code
 
-    # alternative  if(instance.__class__.__name__=="SecurityFutures")
     t1.TIT_STRIKE = sec.strike_place if hasattr(sec,'strike_place') else 0
     t1.TIT_UNDERLYING = sec.underlying_code
     t1.TIT_ISIN_COD = sec.isin
@@ -125,6 +124,10 @@ class MfManager:
     t1.Tit_Asset_Cod = sec.asset_allocation
     t1.TIT_ONLINE_RATE_MULTIPLIER = sec.multiplier_for_online_prices
     t1.TIT_MONITOR_TYPE = sec.monitoring_type
+
+    # automatic fields
+    t1.TIT_FUTUR = 1 if sec.__class__.__name__=="SecurityFutures" else 0
+    t1.TIT_OPTIONS = 1 if sec.__class__.__name__=="SecurityOption" else 0
 
     # add and commit
     if found.count()==0:
