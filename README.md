@@ -13,5 +13,6 @@ pip install django progressbar33 git+https://github.com/pymssql/pymssql.git
 # Import marketflow
 
 - copy importMarketflow.sh.dist to importMarketflow.sh and set env vars for database connection
+- copy "app/credentials.yml.dist" to "app/credentials.yml" and set variables
 - `./importMarketflow.sh --debug`
 
