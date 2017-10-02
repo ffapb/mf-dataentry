@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 from django.db import models
 from .management.commands._mfManager import MfManager
 import yaml
-
+import os
 class MappableModel(models.Model):
     code_leb = models.CharField(max_length=20,  unique=True, null=True, blank=True)
     code_dub = models.CharField(max_length=20,  unique=True, null=True, blank=True)
@@ -44,7 +44,7 @@ class Security(models.Model):
     nationality = models.ForeignKey(Nationality, null=True, blank=True)
     quotation_place = models.CharField(max_length=200)
     deposit_place = models.CharField(max_length=200)
-    ratelist = models.CharField(max_length=200)
+    ratelist = models.IntegerField()
     asset_allocation = models.CharField(max_length=200)
     group_for_ledgers = models.CharField(max_length=200)
     general_ledger = models.CharField(max_length=200)
@@ -65,11 +65,12 @@ class Security(models.Model):
 
 
     def save(self, *args, **options):
-      super(Security,self).save( *args, **options)  
-      credentials = yaml.load(open("credentials.yml",'r'))
-      # credentials = {'host': 'ip', ...
+      super(Security,self).save( *args, **options)
+      dir_path = os.path.dirname(os.path.realpath(__file__))
+      fn=os.path.join(dir_path,"credentials.yml")
+      credentials = yaml.load(open(fn,'r'))
       with MfManager(host=credentials['host'], port=credentials['port'], user=credentials['user'], password=credentials['password'], db=credentials['db']) as mfMan:
-           export= mfMan.insertSecurity(Security)
+           mfMan.insertSecurity(self)
   
 
 #Multi Table Inheritance
