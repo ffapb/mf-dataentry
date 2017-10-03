@@ -73,8 +73,10 @@ class MfManager:
     s = session()
 
     # check if security already exists
-    found = s.query(TITRE).filter(TITRE.TIT_COD.startswith(sec.code))
+    found = s.query(TITRE).filter(TITRE.TIT_COD==sec.code)
     if found.count()>0:
+      if found.count()>1:
+        raise Exception("Found %s rows for code %s"%(found.count(),sec.code))
       t1 = found.one() # will raise error if more than one found
     else:
       t1 = TITRE(TIT_COD=sec.code)
@@ -106,16 +108,10 @@ class MfManager:
     t1.TIT_FIXING = 1 if sec.fixing else 0
     t1.TIT_FIX_1 = sec.fix1
     t1.TIT_FIX_2 = sec.fix2
-    t1.TIT_SHOW = 1 if sec.show else 0
-    t1.TIT_HOLDER = 1 if sec.shareholder_number else 0
-    t1.TIT_NB_UNITE = sec.number_of_units
-    t1.TIT_DAT_MAT = sec.maturity_date.strftime("%Y-%m-%d")
     t1.TIT_SEQ = sec.bank_reference
     t1.TIT_CHART_ACC = sec.general_ledger
     t1.TIT_REU_COD = sec.provider_code
 
-    t1.TIT_STRIKE = sec.strike_place if hasattr(sec,'strike_place') else 0
-    t1.TIT_UNDERLYING = sec.underlying_code
     t1.TIT_ISIN_COD = sec.isin
     t1.TIT_DESC = sec.symbol
     t1.TIT_CATEG = sec.category
@@ -125,9 +121,46 @@ class MfManager:
     t1.TIT_ONLINE_RATE_MULTIPLIER = sec.multiplier_for_online_prices
     t1.TIT_MONITOR_TYPE = sec.monitoring_type
 
-    # automatic fields
-    t1.TIT_FUTUR = 1 if sec.__class__.__name__=="SecurityFutures" else 0
-    t1.TIT_OPTIONS = 1 if sec.__class__.__name__=="SecurityOption" else 0
+    # asset-type-specific fields
+    t1.TIT_FUTUR = 0
+    t1.TIT_OPTIONS = 0
+    t1.TIT_BOND = 0
+    t1.TIT_STRIKE = 0
+    t1.TIT_UNDERLYING = 0
+    t1.TIT_DAT_MAT = ""
+    t1.TIT_HOLDER = 0
+    t1.TIT_SHOW = 0
+    t1.TIT_NB_UNITE = 0
+    t1.TIT_FIRST_NOTICE_DAT = ""
+
+    if sec.__class__.__name__=="SecurityShare":
+      t1.TIT_TYP_TIT_COD = 1
+      t1.TIT_HOLDER = 1 if sec.shareholder_number else 0
+      t1.TIT_SHOW = 1 if sec.show else 0
+
+    if sec.__class__.__name__=="SecurityOption":
+      t1.TIT_OPTIONS = 1 
+      t1.TIT_TYP_TIT_COD = 6
+      t1.TIT_DAT_MAT = sec.maturity_date.strftime("%Y-%m-%d")
+      t1.TIT_UNDERLYING = sec.underlying_code
+      t1.TIT_STRIKE = sec.strike_place
+
+    if sec.__class__.__name__=="SecurityBond":
+      t1.TIT_BOND = 1 
+      t1.TIT_TYP_TIT_COD = 2
+      t1.TIT_CR_RATE1 = sec.moody
+      t1.TIT_CR_RATE2 = sec.fitch
+      t1.TIT_CR_RATE3 = sec.s_and_p
+
+    if sec.__class__.__name__=="SecurityFutures":
+      t1.TIT_FUTUR = 1
+      t1.TIT_TYP_TIT_COD = 5
+      t1.TIT_DAT_MAT = sec.maturity_date.strftime("%Y-%m-%d")
+      t1.TIT_UNDERLYING = sec.underlying_code
+      t1.TIT_NB_UNITE = sec.number_of_units
+      t1.TIT_FIRST_NOTICE_DAT = sec.first_notice_date.strftime("%Y-%m-%d")
+      t1.TIT_HOLDER = 1 if sec.shareholder_number else 0
+      t1.TIT_SHOW = 1 if sec.show else 0
 
     # add and commit
     if found.count()==0:
