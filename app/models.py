@@ -5,8 +5,8 @@ from .management.commands._mfManager import MfManager
 import yaml
 import os
 class MappableModel(models.Model):
-    code_leb = models.CharField(max_length=20,  unique=True, null=True, blank=True)
-    code_dub = models.CharField(max_length=20,  unique=True, null=True, blank=True)
+    code_leb = models.CharField(max_length=2,  unique=True, null=True, blank=True)
+    code_dub = models.CharField(max_length=2,  unique=True, null=True, blank=True)
     name     = models.CharField(max_length=100, unique=True)
     def __str__(self):
         return self.name
@@ -25,6 +25,8 @@ class Currency(MappableModel):
       ordering = ('name', 'code_leb', 'code_dub', )
 
 class Nationality(MappableModel):
+    code_leb = models.CharField(max_length=10,  unique=True, null=True, blank=True)
+    code_dub = models.CharField(max_length=10,  unique=True, null=True, blank=True)
     class Meta:
       verbose_name_plural = "nationalities"
       ordering = ('name', 'code_leb', 'code_dub', )
@@ -32,30 +34,30 @@ class Nationality(MappableModel):
 class Security(models.Model):
     code = models.CharField(max_length=20, unique=True)
     circular = models.CharField(max_length=200)
-    bank_reference = models.CharField(max_length=200)
-    designation = models.CharField(max_length=200)
-    symbol = models.CharField(max_length=200)
+    bank_reference = models.CharField(max_length=6)
+    designation = models.CharField(max_length=100)
+    symbol = models.CharField(max_length=100)
     currency = models.ForeignKey(Currency)
-    subtype = models.CharField(max_length=200)
-    category = models.CharField(max_length=200)
-    trading_category = models.CharField(max_length=200)
+    subtype = models.CharField(max_length=10)
+    category = models.CharField(max_length=10)
+    trading_category = models.CharField(max_length=10)
     nature = models.CharField(max_length=200)
     trading_center = models.CharField(max_length=200)
     nationality = models.ForeignKey(Nationality, null=True, blank=True)
-    quotation_place = models.CharField(max_length=200)
-    deposit_place = models.CharField(max_length=200)
-    ratelist = models.IntegerField()
-    asset_allocation = models.CharField(max_length=200)
+    quotation_place = models.CharField(max_length=10)
+    deposit_place = models.CharField(max_length=6)
+    ratelist = models.CharField(max_length=10)
+    asset_allocation = models.CharField(max_length=10)
     group_for_ledgers = models.CharField(max_length=200)
-    general_ledger = models.CharField(max_length=200)
-    provider_code = models.CharField(max_length=200)
+    general_ledger = models.CharField(max_length=4)
+    provider_code = models.CharField(max_length=50)
     provider_ratelist = models.IntegerField()
     monitoring_type = models.IntegerField()
-    multiplier_for_online_prices = models.CharField(max_length=200)
-    isin = models.CharField(max_length=200)
+    multiplier_for_online_prices = models.IntegerField()
+    isin = models.CharField(max_length=20)
     fixing = models.BooleanField(default=False)
-    fix1 = models.CharField(max_length=200)
-    fix2 = models.CharField(max_length=200)
+    fix1 = models.CharField(max_length=5)
+    fix2 = models.CharField(max_length=5)
     
     class Meta:
       abstract = True
@@ -86,8 +88,8 @@ class SecurityShare (Security):
 class SecurityOption(Security):
 
     maturity_date = models.CharField(max_length=200)
-    underlying_code = models.CharField(max_length=200)
-    strike_place = models.CharField(max_length=200)
+    underlying_code = models.CharField(max_length=10)
+    strike_place = models.FloatField()
 
     def __str__(self):
        return self.code
@@ -102,9 +104,9 @@ class SecurityBond(Security):
 
 
 class SecurityFutures(Security):
-    maturity_date = models.CharField(max_length=200)
-    underlying_code = models.CharField(max_length=200)
-    number_of_units = models.CharField(max_length=200)
+    maturity_date = models.DateTimeField()
+    underlying_code = models.CharField(max_length=10)
+    number_of_units = models.IntegerField()
     first_notice_date = models.CharField(max_length=200)
     shareholder_number = models.BooleanField(default=False)
     show = models.BooleanField(default=False)

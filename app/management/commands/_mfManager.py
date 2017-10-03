@@ -1,5 +1,7 @@
-
 import pymssql
+from .titre import TITRE
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
 class MfManager:
   def __init__(self, host: str=None, port: str=None, user: str=None, password: str=None, db:str=None):
@@ -62,80 +64,74 @@ class MfManager:
     return cursor
   
   def insertSecurity(self,sec):
-    query = """
-    INSERT INTO TITRE (
-      TIT_COD, TIT_CIR, TIT_NOM,
-      TIT_DEV_COD,TIT_TYP_TIT_COD,TIT_STY_COD,TIT_NAT_TIT_COD,TIT_CAT_COD,TIT_MAR_COD,TIT_NAT_COD,
-      TIT_PCE_COD,TIT_DEP_COD,TIT_LST_COD,TIT_FIXING,TIT_FIX_1,TIT_FIX_2,TIT_FRAIS,TIT_FR1,
-      TIT_FR1_FFA,
-      TIT_FR1_DEP,TIT_FR2,TIT_FR2_FFA,TIT_FR2_DEP,TIT_FR3,TIT_FR3_FFA,TIT_FR3_DEP,TIT_FR4,
-      TIT_FR4_FFA, TIT_FR4_DEP,
-      TIT_FR5,TIT_FR5_FFA,TIT_FR5_DEP,TIT_OCCUPE,TIT_O_MOD_COD,TIT_SHOW,TIT_HOLDER,TIT_OPTIONS,
-      TIT_NB_UNITE,TIT_DAT_MAT,TIT_SEQ,TIT_FR1_FFACPT,TIT_FR1_DEPCPT,TIT_FR2_FFACPT,TIT_FR2_DEPCPT,
-      TIT_FR3_FFACPT,TIT_FR3_DEPCPT,TIT_FR4_FFACPT,
-      TIT_FR4_DEPCPT,TIT_FR5_FFACPT,TIT_FR5_DEPCPT,TIT_CHART_ACC,TIT_REU_COD,TIT_DIV_CHART,
-      TIT_MAR,TIT_MAR_LN,TIT_MAR_SH,TIT_UPD,TIT_STRIKE,TIT_UNDERLYING,TIT_PUT,TIT_CALL,TIT_FUTUR,
-      TIT_DEV_COD2,TIT_ISIN_COD,Tit_dep_Ref,TIT_DEV_COD1,TIT_ISSUER,TIT_DESC,TIT_RATIO,TIT_CATEG,
-      TIT_TRADING_CATEG,
-      TIT_RATE_LIST,Tit_Asset_Cod,TIT_FORWARD,TIT_FWD_SPOT,TIT_TREATED_ONLINE,TIT_FIRST_NOTICE_DAT,
-      TIT_PIP_VALUE,TIT_ONLINE_RATE_MULTIPLIER,TIT_MAR_DEV,TIT_MONITOR_TYPE,TIT_CR_RATE1,
-      TIT_CR_RATE2,TIT_CR_RATE3,TIT_TTG_COD,TIT_MAR_LN_MC,TIT_MAR_SH_MC,TIT_UPD_LOGIN,TIT_UPD_ACTION,
-      TIT_UPD_LAST_DATE,TIT_TICKET_PROVIDER_CODE,TIT_TICKET_PROVIDER_SYMBOL
-    ) VALUES (
-      '%s', %s ,'%s','%s', %s,
-      '%s', %s ,'%s', %s ,'%s',
-      '%s','%s', %s ,'%s','%s',
-      '%s', %s , %s , %s , %s ,
-       %s , %s , %s , %s , %s ,
-       %s , %s , %s , %s , %s ,
-       %s , %s , %s , %s , %s ,
-       %s ,'%s','%s', %s ,'%s',
-      '%s','%s', %s , %s , %s ,
-       %s , %s , %s , %s , %s ,
-      '%s',
-      '%s','%s','%s', %s , %s ,
-      '%s',
-      '%s',
-      '%s','%s','%s', %s , %s ,
-       %s ,'%s', %s , %s ,'%s',
-       %s ,'%s','%s','%s','%s',
-      '%s', %s ,'%s', %s, '%s',
-       %s , %s ,'%s', %s , %s ,
-       %s , %s , %s , %s , %s, 
-       %s , %s , % s, %s
-    )
-      """
-    query = query  % (
-      sec.code, 'NULL', sec.designation, sec.currency.code_leb, 'NULL',
-      sec.subtype, '1', sec.category, '4', sec.nationality.code_leb,
-      sec.quotation_place, sec.deposit_place, sec.ratelist, 1 if sec.fixing else 0, sec.fix1,
-      sec.fix2, '0', '0', '0', '0',
-      '0', '0', '0', '0', '0',
-      '0', '0', '0', '0', '0',
-      '0', '0', '0', '0', 1 if sec.show else 0,
-      1 if sec.shareholder_number else 0, '0', sec.number_of_units, sec.maturity_date, sec.bank_reference,
-      '0', '0', '0', '0', '0',
-      '0', '0', '0', '0', '0',
+    url = 'mssql+pymssql://'+self.user+':'+self.password+'@'+self.server+':'+str(self.port)+'/'+self.db
+    engine = create_engine(url)
+     
+    session = sessionmaker()
+    session.configure(bind=engine)
 
-      sec.general_ledger, 
+    s = session()
 
-      sec.provider_code, '4211', '0', 100, 100,
+    # check if security already exists
+    found = s.query(TITRE).filter(TITRE.TIT_COD.startswith(sec.code))
+    if found.count()>0:
+      t1 = found.one() # will raise error if more than one found
+    else:
+      t1 = TITRE(TIT_COD=sec.code)
 
-      '0',
+      # set defaults required
+      t1.TIT_O_MOD_COD = ""
+      t1.TIT_MAR = 100
+      t1.TIT_MAR_LN = 100
+      t1.TIT_MAR_SH = 100
+      t1.TIT_CATEG = ""
+      t1.TIT_TRADING_CATEG = ""
+      t1.TIT_RATE_LIST = 1
+      t1.Tit_Asset_Cod = ""
+      t1.TIT_FORWARD = 1
+      t1.TIT_TREATED_ONLINE = 0
+      t1.TIT_PIP_VALUE = 10
+      t1.TIT_MONITOR_TYPE = 0
+      t1.TIT_TTG_COD = 0
 
-      # alternative  if(instance.__class__.__name__=="SecurityFutures")
-      sec.strike_place if hasattr(sec,'strike_place') else 0, 
+    # set fields
+    t1.TIT_NOM = sec.designation
+    t1.TIT_DEV_COD = sec.currency.code_leb
+    t1.TIT_STY_COD =  sec.subtype
+    # wrong? # t1.TIT_CAT_COD = sec.category
+    t1.TIT_NAT_COD = sec.nationality.code_leb
+    t1.TIT_PCE_COD = sec.quotation_place
+    t1.TIT_DEP_COD = sec.deposit_place
+    t1.TIT_LST_COD = sec.ratelist
+    t1.TIT_FIXING = 1 if sec.fixing else 0
+    t1.TIT_FIX_1 = sec.fix1
+    t1.TIT_FIX_2 = sec.fix2
+    t1.TIT_SHOW = 1 if sec.show else 0
+    t1.TIT_HOLDER = 1 if sec.shareholder_number else 0
+    t1.TIT_NB_UNITE = sec.number_of_units
+    t1.TIT_DAT_MAT = sec.maturity_date.strftime("%Y-%m-%d")
+    t1.TIT_SEQ = sec.bank_reference
+    t1.TIT_CHART_ACC = sec.general_ledger
+    t1.TIT_REU_COD = sec.provider_code
 
-      sec.underlying_code, '0', '0', '0', 'NULL',
-      sec.isin, sec.bank_reference, 'NULL', 'NULL', sec.symbol,
-      '0', sec.category, sec.trading_category, sec.provider_ratelist, sec.asset_allocation,
-      '0', 'NULL', 0, 'NULL', '0', 
-      sec.multiplier_for_online_prices, 2, sec.monitoring_type, 'NULL', 'NULL',
-      'NULL', '0', 100, 100, 'NULL',
-      'NULL', 'NULL', 'NULL', 'NULL'
-    )
-    print(query)
-    # query = "INSERT INTO TITRE (TIT_COD) VALUES (%s)" %(100)
-    cursor = self._execute(query )
-    self.conn.commit()
-    return cursor
+    t1.TIT_STRIKE = sec.strike_place if hasattr(sec,'strike_place') else 0
+    t1.TIT_UNDERLYING = sec.underlying_code
+    t1.TIT_ISIN_COD = sec.isin
+    t1.TIT_DESC = sec.symbol
+    t1.TIT_CATEG = sec.category
+    t1.TIT_TRADING_CATEG = sec.trading_category
+    t1.TIT_RATE_LIST = sec.provider_ratelist
+    t1.Tit_Asset_Cod = sec.asset_allocation
+    t1.TIT_ONLINE_RATE_MULTIPLIER = sec.multiplier_for_online_prices
+    t1.TIT_MONITOR_TYPE = sec.monitoring_type
+
+    # automatic fields
+    t1.TIT_FUTUR = 1 if sec.__class__.__name__=="SecurityFutures" else 0
+    t1.TIT_OPTIONS = 1 if sec.__class__.__name__=="SecurityOption" else 0
+
+    # add and commit
+    if found.count()==0:
+      s.add(t1)
+
+    s.commit()
+
