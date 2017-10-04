@@ -9,7 +9,8 @@ pew new mf_dataentry
 # for more info about pymssql check ffapb/ffa-blotter requirement.txt
 pip install django progressbar33 git+https://github.com/pymssql/pymssql.git
 pip install pip PyYAML
-pip install Flask-SQLAlchemy
++pip install Flask-SQLAlchemy
+
 ```
 
 # Import marketflow
