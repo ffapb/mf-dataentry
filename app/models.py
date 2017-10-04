@@ -87,7 +87,7 @@ class SecurityShare (Security):
       
 class SecurityOption(Security):
 
-    maturity_date = models.CharField(max_length=200)
+    maturity_date = models.DateTimeField()
     underlying_code = models.CharField(max_length=10)
     strike_place = models.FloatField()
 
@@ -96,9 +96,9 @@ class SecurityOption(Security):
 
 
 class SecurityBond(Security):
-    moody = models.CharField(max_length=200)
-    fitch = models.CharField(max_length=200)
-    s_and_p = models.CharField(max_length=200)
+    moody = models.CharField(max_length=100)
+    fitch = models.CharField(max_length=100)
+    s_and_p = models.CharField(max_length=100)
     def __str__(self):
        return self.code
 
@@ -107,7 +107,7 @@ class SecurityFutures(Security):
     maturity_date = models.DateTimeField()
     underlying_code = models.CharField(max_length=10)
     number_of_units = models.IntegerField()
-    first_notice_date = models.CharField(max_length=200)
+    first_notice_date = models.DateTimeField()
     shareholder_number = models.BooleanField(default=False)
     show = models.BooleanField(default=False)
     def __str__(self):

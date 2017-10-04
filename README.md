@@ -10,6 +10,7 @@ pew new mf_dataentry
 pip install django progressbar33 git+https://github.com/pymssql/pymssql.git
 pip install pip PyYAML
 +pip install Flask-SQLAlchemy
+
 ```
 
 # Import marketflow
