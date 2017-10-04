@@ -82,19 +82,18 @@ class MfManager:
       t1 = TITRE(TIT_COD=sec.code)
 
       # set defaults required
-      t1.TIT_O_MOD_COD = ""
-      t1.TIT_MAR = 100
-      t1.TIT_MAR_LN = 100
-      t1.TIT_MAR_SH = 100
+      t1.TIT_O_MOD_COD = 0
       t1.TIT_CATEG = ""
       t1.TIT_TRADING_CATEG = ""
       t1.TIT_RATE_LIST = 1
       t1.Tit_Asset_Cod = ""
-      t1.TIT_FORWARD = 1
+      #t1.TIT_FORWARD = 0
       t1.TIT_TREATED_ONLINE = 0
-      t1.TIT_PIP_VALUE = 10
-      t1.TIT_MONITOR_TYPE = 0
-      t1.TIT_TTG_COD = 0
+      #t1.TIT_PIP_VALUE = 0
+      #t1.TIT_MONITOR_TYPE = 0
+      #t1.TIT_TTG_COD = 0
+      #t1.TIT_NB_UNITE = 1
+     
 
     # set fields
     t1.TIT_NOM = sec.designation
@@ -111,7 +110,8 @@ class MfManager:
     t1.TIT_SEQ = sec.bank_reference
     t1.TIT_CHART_ACC = sec.general_ledger
     t1.TIT_REU_COD = sec.provider_code
-
+    t1.TIT_NAT_TIT_COD= sec.nature
+    t1.TIT_MAR_COD = sec.trading_center
     t1.TIT_ISIN_COD = sec.isin
     t1.TIT_DESC = sec.symbol
     t1.TIT_CATEG = sec.category
@@ -119,7 +119,11 @@ class MfManager:
     t1.TIT_RATE_LIST = sec.provider_ratelist
     t1.Tit_Asset_Cod = sec.asset_allocation
     t1.TIT_ONLINE_RATE_MULTIPLIER = sec.multiplier_for_online_prices
-    t1.TIT_MONITOR_TYPE = sec.monitoring_type
+    t1.TIT_MAR_LN_MC = sec.main_lng_position
+    t1.TIT_MAR_SH_MC = sec.main_short_position
+    t1.TIT_MAR_LN = sec.mar_lng_position
+    t1.TIT_MAR_SH = sec.mar_short_position
+    #t1.TIT_MONITOR_TYPE = sec.monitoring_type
 
     # asset-type-specific fields
     t1.TIT_FUTUR = 0
@@ -128,10 +132,16 @@ class MfManager:
     t1.TIT_STRIKE = 0
     t1.TIT_UNDERLYING = 0
     t1.TIT_DAT_MAT = ""
-    t1.TIT_HOLDER = 0
+    t1.TIT_HOLDER = ""
     t1.TIT_SHOW = 0
-    t1.TIT_NB_UNITE = 0
     t1.TIT_FIRST_NOTICE_DAT = ""
+    t1.TIT_NB_UNITE = 1
+    t1.TIT_MAR = 0
+    t1.TIT_FORWARD = 0
+    t1.TIT_PIP_VALUE = 0
+    t1.TIT_TTG_COD = 0
+    t1.TIT_MONITOR_TYPE = 0
+
 
     if sec.__class__.__name__=="SecurityShare":
       t1.TIT_TYP_TIT_COD = 1
@@ -146,12 +156,15 @@ class MfManager:
       t1.TIT_STRIKE = sec.strike_place
 
     if sec.__class__.__name__=="SecurityBond":
+     
       t1.TIT_BOND = 1 
       t1.TIT_TYP_TIT_COD = 2
       t1.TIT_CR_RATE1 = sec.moody
       t1.TIT_CR_RATE2 = sec.fitch
       t1.TIT_CR_RATE3 = sec.s_and_p
+      
 
+        
     if sec.__class__.__name__=="SecurityFutures":
       t1.TIT_FUTUR = 1
       t1.TIT_TYP_TIT_COD = 5

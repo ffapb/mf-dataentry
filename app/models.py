@@ -52,12 +52,19 @@ class Security(models.Model):
     general_ledger = models.CharField(max_length=4)
     provider_code = models.CharField(max_length=50)
     provider_ratelist = models.IntegerField()
-    monitoring_type = models.IntegerField()
+   # monitoring_type = models.IntegerField()
     multiplier_for_online_prices = models.IntegerField()
     isin = models.CharField(max_length=20)
     fixing = models.BooleanField(default=False)
     fix1 = models.CharField(max_length=5)
     fix2 = models.CharField(max_length=5)
+    mar_short_position = models.CharField(max_length=5)
+    mar_lng_position = models.CharField(max_length=5)
+    main_short_position = models.CharField(max_length=5)
+    main_lng_position = models.CharField(max_length=5)
+    
+   
+   
     
     class Meta:
       abstract = True
