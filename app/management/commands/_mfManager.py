@@ -107,7 +107,7 @@ class MfManager:
     t1.TIT_FIXING = 1 if sec.fixing else 0
     t1.TIT_FIX_1 = sec.fix1
     t1.TIT_FIX_2 = sec.fix2
-    t1.TIT_SEQ = sec.bank_reference
+    t1.Tit_dep_Ref = sec.bank_reference
     t1.TIT_CHART_ACC = sec.general_ledger
     t1.TIT_REU_COD = sec.provider_code
     t1.TIT_NAT_TIT_COD= sec.nature
