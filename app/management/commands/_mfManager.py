@@ -108,6 +108,7 @@ class MfManager:
     t1.TIT_FIX_1 = sec.fix1
     t1.TIT_FIX_2 = sec.fix2
     t1.Tit_dep_Ref = sec.bank_reference
+    t1.TIT_SEQ = sec.bank_reference
     t1.TIT_CHART_ACC = sec.general_ledger
     t1.TIT_REU_COD = sec.provider_code
     t1.TIT_NAT_TIT_COD= sec.nature
@@ -141,12 +142,13 @@ class MfManager:
     t1.TIT_PIP_VALUE = 0
     t1.TIT_TTG_COD = 0
     t1.TIT_MONITOR_TYPE = 0
-
+    t1.TIT_OCCUPE = 0
 
     if sec.__class__.__name__=="SecurityShare":
       t1.TIT_TYP_TIT_COD = 1
       t1.TIT_HOLDER = 1 if sec.shareholder_number else 0
       t1.TIT_SHOW = 1 if sec.show else 0
+      t1.TIT_DIV_CHART = 4211
 
     if sec.__class__.__name__=="SecurityOption":
       t1.TIT_OPTIONS = 1 
@@ -154,6 +156,7 @@ class MfManager:
       t1.TIT_DAT_MAT = sec.maturity_date.strftime("%Y-%m-%d")
       t1.TIT_UNDERLYING = sec.underlying_code
       t1.TIT_STRIKE = sec.strike_place
+      t1.TIT_DIV_CHART = ""
 
     if sec.__class__.__name__=="SecurityBond":
      
@@ -162,7 +165,7 @@ class MfManager:
       t1.TIT_CR_RATE1 = sec.moody
       t1.TIT_CR_RATE2 = sec.fitch
       t1.TIT_CR_RATE3 = sec.s_and_p
-      
+      t1.TIT_DIV_CHART = 4211
 
         
     if sec.__class__.__name__=="SecurityFutures":
@@ -174,7 +177,8 @@ class MfManager:
       t1.TIT_FIRST_NOTICE_DAT = sec.first_notice_date.strftime("%Y-%m-%d")
       t1.TIT_HOLDER = 1 if sec.shareholder_number else 0
       t1.TIT_SHOW = 1 if sec.show else 0
-
+      t1.TIT_OCCUPE= '-1'
+      t1.TIT_DIV_CHART = 8904
     # add and commit
     if found.count()==0:
       s.add(t1)
