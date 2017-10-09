@@ -62,6 +62,16 @@ class MfManager:
      
     """)
     return cursor
+
+  def titreSeqMax(self):
+    cursor = self._execute("""
+      Select max(tit_seq) as m
+      from titre
+      where len(tit_seq)=6 and cast(tit_seq as int) = tit_seq
+""")
+    res = cursor.fetchall()
+    return res[0]['m']
+
   
   def insertSecurity(self,sec):
     url = 'mssql+pymssql://'+self.user+':'+self.password+'@'+self.server+':'+str(self.port)+'/'+self.db
@@ -107,8 +117,12 @@ class MfManager:
     t1.TIT_FIXING = 1 if sec.fixing else 0
     t1.TIT_FIX_1 = sec.fix1
     t1.TIT_FIX_2 = sec.fix2
-    t1.Tit_dep_Ref = sec.bank_reference
-    t1.TIT_SEQ = sec.bank_reference
+
+    # set increment field that is not "auto" in marketflow database
+    m = "%06.0f" % ( int(self.titreSeqMax()) + 1 )
+    t1.Tit_dep_Ref = m
+    t1.TIT_SEQ = m
+
     t1.TIT_CHART_ACC = sec.general_ledger
     t1.TIT_REU_COD = sec.provider_code
     t1.TIT_NAT_TIT_COD= sec.nature

@@ -34,7 +34,6 @@ class Nationality(MappableModel):
 class Security(models.Model):
     code = models.CharField(max_length=20, unique=True)
     circular = models.CharField(max_length=200)
-    bank_reference = models.CharField(max_length=6)
     designation = models.CharField(max_length=100)
     symbol = models.CharField(max_length=100)
     currency = models.ForeignKey(Currency)
