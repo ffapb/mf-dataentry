@@ -29,7 +29,26 @@ class Nationality(MappableModel):
     code_dub = models.CharField(max_length=10,  unique=True, null=True, blank=True)
     class Meta:
       verbose_name_plural = "nationalities"
+
       ordering = ('name', 'code_leb', 'code_dub', )
+
+
+
+class Subtype(MappableModel):
+    code_leb = models.CharField(max_length=10,  unique=True, null=True, blank=True)
+    code_dub = models.CharField(max_length=10,  unique=True, null=True, blank=True)
+    class Meta:
+      verbose_name_plural = "subtypes"
+
+      ordering = ('name', 'code_leb', 'code_dub', )
+
+
+class RateListProvider(MappableModel):
+    code_leb = models.CharField(max_length=10,  unique=True, null=True, blank=True)
+    code_dub = models.CharField(max_length=10,  unique=True, null=True, blank=True)
+    class Meta:
+      ordering = ('name', 'code_leb', 'code_dub', )
+
 
 class Security(models.Model):
     code = models.CharField(max_length=20, unique=True)
@@ -37,7 +56,7 @@ class Security(models.Model):
     designation = models.CharField(max_length=100)
     symbol = models.CharField(max_length=100)
     currency = models.ForeignKey(Currency)
-    subtype = models.CharField(max_length=10)
+    subtype = models.ForeignKey(Subtype)
     category = models.CharField(max_length=10)
     trading_category = models.CharField(max_length=10)
     nature = models.CharField(max_length=200)
@@ -50,7 +69,7 @@ class Security(models.Model):
     group_for_ledgers = models.CharField(max_length=200)
     general_ledger = models.CharField(max_length=4)
     provider_code = models.CharField(max_length=50)
-    provider_ratelist = models.IntegerField()
+    provider_ratelist = models.ForeignKey(RateListProvider)
    # monitoring_type = models.IntegerField()
     multiplier_for_online_prices = models.IntegerField()
     isin = models.CharField(max_length=20)

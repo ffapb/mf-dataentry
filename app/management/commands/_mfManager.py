@@ -63,6 +63,44 @@ class MfManager:
     """)
     return cursor
 
+  def subtypeCount(self):
+    cursor = self._execute("""
+      SELECT
+        count(*) as o
+      FROM SOUSTYPETITRE 
+  
+    """)
+       
+    res = cursor.fetchall()
+    return res[0]['o']
+
+  def subtypeList(self):
+    cursor = self._execute("""
+      SELECT STY_COD, STY_LIB_LGE1
+                                
+      FROM SOUSTYPETITRE
+                   
+    """)
+    return cursor
+
+  def rateproviderCount(self):
+    cursor = self._execute("""
+      SELECT
+      count(*) as r
+      FROM RateList                    
+    """)
+
+    res = cursor.fetchall()
+    return res[0]['r']
+
+  def rateproviderList(self):
+    cursor = self._execute("""
+     SELECT RTL_COD, RTL_LIB_LGE1
+     FROM RateList
+                                                  
+   """)
+    return cursor
+
   def titreSeqMax(self):
     cursor = self._execute("""
       Select max(tit_seq) as m
@@ -170,7 +208,8 @@ class MfManager:
       t1.TIT_DAT_MAT = sec.maturity_date.strftime("%Y-%m-%d")
       t1.TIT_UNDERLYING = sec.underlying_code
       t1.TIT_STRIKE = sec.strike_place
-      t1.TIT_DIV_CHART = ""
+      t1.TIT_DIV_CHART = "4211"
+      t1.TIT_OCCUPE= '-1'
 
     if sec.__class__.__name__=="SecurityBond":
      

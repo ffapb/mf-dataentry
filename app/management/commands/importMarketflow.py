@@ -1,6 +1,6 @@
 import logging
 from ._mfManager import MfManager
-from ...models import Currency, Nationality
+from ...models import Currency, Nationality, Subtype, RateListProvider
 
 
 # https://docs.djangoproject.com/en/1.10/howto/custom-management-commands/
@@ -74,6 +74,16 @@ class Command(BaseCommand):
       listGenerator =  mfMan.nationalitiesList()
       self._handle_core(total, listGenerator, 'NAT_COD', 'NAT_LIB_LGE1', Nationality)
 
+  def _handle_subtype(self, mfMan):
+      total = mfMan.subtypeCount()
+      listGenerator =  mfMan.subtypeList()
+      self._handle_core(total, listGenerator, 'STY_COD', 'STY_LIB_LGE1', Subtype)
+
+  def _handle_ratelistprovider(self, mfMan):
+      total = mfMan.rateproviderCount()
+      listGenerator =  mfMan.rateproviderList()
+      self._handle_core(total, listGenerator, 'RTL_COD', 'RTL_LIB_LGE1', RateListProvider)
+
 
   def handle(self, *args, **options):
     h1 = logging.StreamHandler(stream=self.stderr)
@@ -90,3 +100,5 @@ class Command(BaseCommand):
     with MfManager(host=options['host'], port=options['port'], user=options['user'], password=options['password'], db=options['db']) as mfMan:
       self._handle_currency(mfMan)
       self._handle_nationality(mfMan)
+      self._handle_subtype(mfMan)
+      self._handle_ratelistprovider(mfMan)
