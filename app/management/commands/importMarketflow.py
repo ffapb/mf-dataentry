@@ -1,6 +1,6 @@
 import logging
 from ._mfManager import MfManager
-from ...models import Currency, Nationality, Subtype, RateListProvider
+from ...models import Currency, Nationality, Subtype, RateListProvider,Nature, AssetAllocation, Category
 
 
 # https://docs.djangoproject.com/en/1.10/howto/custom-management-commands/
@@ -85,6 +85,22 @@ class Command(BaseCommand):
       self._handle_core(total, listGenerator, 'RTL_COD', 'RTL_LIB_LGE1', RateListProvider)
 
 
+  def _handle_nature(self, mfMan):
+      total = mfMan.natureCount()
+      listGenerator =  mfMan.natureList()
+      self._handle_core(total, listGenerator, 'NAT_TIT_COD', 'NAT_TIT_LIB_LGE1', Nature)
+
+  def _handle_assetallocation(self, mfMan):
+      total = mfMan.currenciesCount()
+      listGenerator =  mfMan.assetallocationList()
+      self._handle_core(total, listGenerator, 'Asset_Cod', 'Asset_Desc1', AssetAllocation)
+
+  def _handle_category(self, mfMan):
+      total = mfMan.categoryCount()
+      listGenerator =  mfMan.categoryList()
+      self._handle_core(total, listGenerator, 'Tit_Category_Cod', 'Tit_Cat_Desc1', Category)
+
+
   def handle(self, *args, **options):
     h1 = logging.StreamHandler(stream=self.stderr)
     logger.addHandler(h1)
@@ -102,3 +118,6 @@ class Command(BaseCommand):
       self._handle_nationality(mfMan)
       self._handle_subtype(mfMan)
       self._handle_ratelistprovider(mfMan)
+      self._handle_nature(mfMan)
+      self._handle_assetallocation(mfMan)
+      self._handle_category(mfMan)

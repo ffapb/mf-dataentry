@@ -101,6 +101,46 @@ class MfManager:
    """)
     return cursor
 
+  def assetallocationCount(self):
+    cursor = self._execute("""
+      SELECT
+      count(*) as a
+      FROM Titre_AssetAllocation                    
+   """)
+
+    res = cursor.fetchall()
+    return res[0]['a']
+
+  def assetallocationList(self):
+    cursor = self._execute("""
+       SELECT Asset_Cod, Asset_Desc1
+       FROM Titre_AssetAllocation
+                                                                                
+    """)
+    return cursor
+
+
+  def categoryCount(self):
+    cursor = self._execute("""
+       SELECT
+       count(*) as c
+       FROM Titre_Category
+                                                              
+    """)
+    res = cursor.fetchall()
+    return res[0]['c']
+
+  def categoryList(self):
+    cursor = self._execute("""
+       SELECT Tit_Category_Cod, Tit_Cat_Desc1
+                                      
+       FROM Titre_Category
+                                                                                                         
+   """)
+    return cursor
+
+
+
   def titreSeqMax(self):
     cursor = self._execute("""
       Select max(tit_seq) as m
@@ -109,6 +149,27 @@ class MfManager:
 """)
     res = cursor.fetchall()
     return res[0]['m']
+
+
+  def natureCount(self):
+      cursor = self._execute("""
+        SELECT
+        count(*) as n
+        FROM NATURETITRE
+                                
+      """)
+      res = cursor.fetchall()
+      return res[0]['n']
+
+  def natureList(self):
+      cursor = self._execute("""
+        SELECT NAT_TIT_COD, NAT_TIT_LIB_LGE1
+                  
+        FROM NATURETITRE
+                                             
+     """)
+      return cursor
+
 
   
   def insertSecurity(self,sec):
@@ -141,7 +202,7 @@ class MfManager:
       #t1.TIT_MONITOR_TYPE = 0
       #t1.TIT_TTG_COD = 0
       #t1.TIT_NB_UNITE = 1
-     
+      t1.TIT_LST_COD = "None"
 
     # set fields
     t1.TIT_NOM = sec.designation
@@ -151,7 +212,7 @@ class MfManager:
     t1.TIT_NAT_COD = sec.nationality.code_leb
     t1.TIT_PCE_COD = sec.quotation_place
     t1.TIT_DEP_COD = sec.deposit_place
-    t1.TIT_LST_COD = sec.ratelist
+    #t1.TIT_LST_COD = sec.ratelist
     t1.TIT_FIXING = 1 if sec.fixing else 0
     t1.TIT_FIX_1 = sec.fix1
     t1.TIT_FIX_2 = sec.fix2

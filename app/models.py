@@ -49,6 +49,24 @@ class RateListProvider(MappableModel):
     class Meta:
       ordering = ('name', 'code_leb', 'code_dub', )
 
+class Nature(MappableModel):
+    code_leb = models.CharField(max_length=10,  unique=True, null=True, blank=True)
+    code_dub = models.CharField(max_length=10,  unique=True, null=True, blank=True)
+    class Meta:
+      ordering = ('name', 'code_leb', 'code_dub', )
+
+class AssetAllocation(MappableModel):
+    code_leb = models.CharField(max_length=10,  unique=True, null=True, blank=True)
+    code_dub = models.CharField(max_length=10,  unique=True, null=True, blank=True)
+    class Meta:
+      ordering = ('name', 'code_leb', 'code_dub', )
+
+class Category(MappableModel):
+    code_leb = models.CharField(max_length=10,  unique=True, null=True, blank=True)
+    code_dub = models.CharField(max_length=10,  unique=True, null=True, blank=True)
+    class Meta:
+      ordering = ('name', 'code_leb', 'code_dub', )
+
 
 class Security(models.Model):
     code = models.CharField(max_length=20, unique=True)
@@ -57,15 +75,15 @@ class Security(models.Model):
     symbol = models.CharField(max_length=100)
     currency = models.ForeignKey(Currency)
     subtype = models.ForeignKey(Subtype)
-    category = models.CharField(max_length=10)
+    category = models.ForeignKey(Category)
     trading_category = models.CharField(max_length=10)
-    nature = models.CharField(max_length=200)
+    nature = models.ForeignKey(Nature)
     trading_center = models.CharField(max_length=200)
     nationality = models.ForeignKey(Nationality, null=True, blank=True)
     quotation_place = models.CharField(max_length=10)
     deposit_place = models.CharField(max_length=6)
     ratelist = models.CharField(max_length=10)
-    asset_allocation = models.CharField(max_length=10)
+    asset_allocation = models.ForeignKey(AssetAllocation)
     group_for_ledgers = models.CharField(max_length=200)
     general_ledger = models.CharField(max_length=4)
     provider_code = models.CharField(max_length=50)
