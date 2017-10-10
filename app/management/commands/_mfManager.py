@@ -140,6 +140,63 @@ class MfManager:
     return cursor
 
 
+  def tradingcategoryCount(self):
+    cursor = self._execute("""
+       SELECT
+       count(*) as tc
+       FROM Trading_Category
+                                                                  
+     """)
+    res = cursor.fetchall()
+    return res[0]['tc']
+
+  def tradingcategoryList(self):
+    cursor = self._execute("""
+       SELECT Trad_Cat_Code, Trad_Cat_Desc1
+                                                   
+       FROM Trading_Category
+                                                                                                                                                                                 
+    """)
+    return cursor
+
+  def quotationplaceCount(self):
+      cursor = self._execute("""
+          SELECT
+          count(*) as qp
+          FROM PLACECOTATION
+                                                                                         
+       """)
+      res = cursor.fetchall()
+      return res[0]['qp']
+
+  def quotationplaceList(self):
+      cursor = self._execute("""
+         SELECT PCE_COD, PCE_LIB_LGE1
+                                                                 
+         FROM PLACECOTATION
+                                                                                                                                                                                 
+      """)
+      return cursor
+
+  def tradingcenterCount(self):
+      cursor = self._execute("""
+         SELECT
+         count(*) as tce
+         FROM MARCHE
+                                                                                                                               
+      """)
+      res = cursor.fetchall()
+      return res[0]['tce']
+
+  def tradingcenterList(self):
+      cursor = self._execute("""
+         SELECT MAR_COD, MAR_LIB_LGE1
+                                                                                                      
+         FROM MARCHE                                                                                                                                                                                                                                                                                                                                                                                                          """)
+      return cursor
+                        
+
+
 
   def titreSeqMax(self):
     cursor = self._execute("""

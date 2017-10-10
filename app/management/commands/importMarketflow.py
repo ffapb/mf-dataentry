@@ -1,6 +1,6 @@
 import logging
 from ._mfManager import MfManager
-from ...models import Currency, Nationality, Subtype, RateListProvider,Nature, AssetAllocation, Category
+from ...models import Currency, Nationality, Subtype, RateListProvider,Nature, AssetAllocation, Category , TradingCategory , QuotationPlace , TradingCenter
 
 
 # https://docs.djangoproject.com/en/1.10/howto/custom-management-commands/
@@ -99,6 +99,22 @@ class Command(BaseCommand):
       total = mfMan.categoryCount()
       listGenerator =  mfMan.categoryList()
       self._handle_core(total, listGenerator, 'Tit_Category_Cod', 'Tit_Cat_Desc1', Category)
+ 
+  def _handle_tradingcategory(self, mfMan):
+      total = mfMan.tradingcategoryCount()
+      listGenerator =  mfMan.tradingcategoryList()
+      self._handle_core(total, listGenerator, 'Trad_Cat_Code', 'Trad_Cat_Desc1', TradingCategory)
+
+  def _handle_quotationplace(self, mfMan):
+      total = mfMan.quotationplaceCount()
+      listGenerator =  mfMan.quotationplaceList()
+      self._handle_core(total, listGenerator, 'PCE_COD', 'PCE_LIB_LGE1', QuotationPlace)
+
+  def _handle_tradingcenter(self, mfMan):
+      total = mfMan.tradingcenterCount()
+      listGenerator =  mfMan.tradingcenterList()
+      self._handle_core(total, listGenerator, 'MAR_COD', 'MAR_LIB_LGE1', TradingCenter)
+
 
 
   def handle(self, *args, **options):
@@ -121,3 +137,6 @@ class Command(BaseCommand):
       self._handle_nature(mfMan)
       self._handle_assetallocation(mfMan)
       self._handle_category(mfMan)
+      self._handle_tradingcategory(mfMan)
+      self._handle_quotationplace(mfMan)
+      self._handle_tradingcenter(mfMan)
