@@ -227,9 +227,10 @@ class MfManager:
      """)
       return cursor
 
-
-  
-  def insertSecurity(self,sec):
+  def getCodeLebDub(self, x, origin):
+    return x.code_leb if origin=="MF Lebanon" else x.code_dub
+ 
+  def insertSecurity(self, sec, origin):
     url = 'mssql+pymssql://'+self.user+':'+self.password+'@'+self.server+':'+str(self.port)+'/'+self.db
     engine = create_engine(url)
      
@@ -263,10 +264,10 @@ class MfManager:
 
     # set fields
     t1.TIT_NOM = sec.designation
-    t1.TIT_DEV_COD = sec.currency.code_leb
+    t1.TIT_DEV_COD = self.getCodeLebDub(sec.currency)
     t1.TIT_STY_COD =  sec.subtype
     # wrong? # t1.TIT_CAT_COD = sec.category
-    t1.TIT_NAT_COD = sec.nationality.code_leb
+    t1.TIT_NAT_COD = self.getCodeLebDub(sec.nationality)
     t1.TIT_PCE_COD = sec.quotation_place
     t1.TIT_DEP_COD = sec.deposit_place
     #t1.TIT_LST_COD = sec.ratelist

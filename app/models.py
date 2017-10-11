@@ -125,14 +125,26 @@ class Security(models.Model):
     def __str__(self):
        return self.code
 
+    def checkAllDropdownsOnBothLebDub(self):
+      if self.currency.code_leb=='':
+        raise Exception("Missing currency in leb")
+      if self.currency.code_dub=='':
+        raise Exception("Missing currency in dub")
+      if self.nationality.code_leb=='':
+        raise Exception("Missing nationality in leb")
+      if self.nationality.code_dub=='':
+        raise Exception("Missing nationality in dub")
 
     def save(self, *args, **options):
+      self.checkAllDropdownsOnBothLebDub()
+
       super(Security,self).save( *args, **options)
       dir_path = os.path.dirname(os.path.realpath(__file__))
       fn=os.path.join(dir_path,"credentials.yml")
-      credentials = yaml.load(open(fn,'r'))
-      with MfManager(host=credentials['host'], port=credentials['port'], user=credentials['user'], password=credentials['password'], db=credentials['db']) as mfMan:
-           mfMan.insertSecurity(self)
+      both = yaml.load(open(fn,'r'))
+      for base, credentials in both.items():
+        with MfManager(host=credentials['host'], port=credentials['port'], user=credentials['user'], password=credentials['password'], db=credentials['db']) as mfMan:
+          mfMan.insertSecurity(self, credentials['origin'])
   
 
 #Multi Table Inheritance
