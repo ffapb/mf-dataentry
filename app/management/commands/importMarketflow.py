@@ -1,6 +1,6 @@
 import logging
 from ._mfManager import MfManager
-from ...models import Currency, Nationality, Subtype, RateListProvider,Nature, AssetAllocation, Category , TradingCategory , QuotationPlace , TradingCenter
+from ...models import Currency, Nationality, Subtype, RateListProvider,Nature, AssetAllocation, Category , TradingCategory , QuotationPlace , TradingCenter, DepositPlace
 
 
 # https://docs.djangoproject.com/en/1.10/howto/custom-management-commands/
@@ -116,6 +116,13 @@ class Command(BaseCommand):
       self._handle_core(total, listGenerator, 'MAR_COD', 'MAR_LIB_LGE1', TradingCenter)
 
 
+  def _handle_depositplace(self, mfMan):
+      total = mfMan.depositplaceCount()
+      listGenerator =  mfMan.depositplaceList()
+      self._handle_core(total, listGenerator, 'ENT_COD', 'ENT_FULL_NAME', DepositPlace)
+
+
+
 
   def handle(self, *args, **options):
     h1 = logging.StreamHandler(stream=self.stderr)
@@ -140,3 +147,4 @@ class Command(BaseCommand):
       self._handle_tradingcategory(mfMan)
       self._handle_quotationplace(mfMan)
       self._handle_tradingcenter(mfMan)
+      self._handle_depositplace(mfMan)

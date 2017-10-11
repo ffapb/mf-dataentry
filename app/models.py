@@ -85,6 +85,12 @@ class TradingCenter(MappableModel):
     class Meta:
       ordering = ('name', 'code_leb', 'code_dub', )
 
+class DepositPlace(MappableModel):
+    code_leb = models.CharField(max_length=10,  unique=True, null=True, blank=True)
+    code_dub = models.CharField(max_length=10,  unique=True, null=True, blank=True)
+    class Meta:
+      ordering = ('name', 'code_leb', 'code_dub', )
+
 class Security(models.Model):
     code = models.CharField(max_length=20, unique=True)
     circular = models.CharField(max_length=200)
@@ -97,7 +103,7 @@ class Security(models.Model):
     nature = models.ForeignKey(Nature)
     trading_center = models.ForeignKey(TradingCenter)
     nationality = models.ForeignKey(Nationality, null=True, blank=True)
-    deposit_place = models.CharField(max_length=10)
+    deposit_place = models.ForeignKey(DepositPlace)
     quotation_place = models.ForeignKey(QuotationPlace)
     ratelist = models.CharField(max_length=10)
     asset_allocation = models.ForeignKey(AssetAllocation)

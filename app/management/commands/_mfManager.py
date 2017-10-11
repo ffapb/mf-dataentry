@@ -227,6 +227,31 @@ class MfManager:
      """)
       return cursor
 
+
+  def depositplaceCount(self):
+      cursor = self._execute("""
+        SELECT
+        count(*) as dp
+        FROM CLIENT_ENTITY
+       
+        where CLIENT_ENTITY.ENT_TYPE='4'
+                                                                   
+     """)
+      res = cursor.fetchall()
+      return res[0]['dp']
+
+  def depositplaceList(self):
+      cursor = self._execute("""
+        SELECT  ENT_COD,ENT_FULL_NAME
+                                                         
+        FROM CLIENT_ENTITY
+               
+        where CLIENT_ENTITY.ENT_TYPE='4'
+                                                                                                                      
+      """)
+      return cursor
+
+
   def getCodeLebDub(self, x, origin):
     return x.code_leb if origin=="MF Lebanon" else x.code_dub
  
@@ -296,8 +321,8 @@ class MfManager:
     t1.TIT_STY_COD =  self.getCodeLebDub(sec.subtype, origin)
     # wrong? # t1.TIT_CAT_COD = sec.category
     t1.TIT_NAT_COD = self.getCodeLebDub(sec.nationality, origin)
-    t1.TIT_PCE_COD = sec.quotation_place
-    t1.TIT_DEP_COD = sec.deposit_place
+    t1.TIT_PCE_COD = self.getCodeLebDub(sec.uottaion_place, origin)
+    t1.TIT_DEP_COD = self.getCodeLebDub(sec.deposit_place, origin)
     #t1.TIT_LST_COD = sec.ratelist
     t1.TIT_FIXING = 1 if sec.fixing else 0
     t1.TIT_FIX_1 = sec.fix1
@@ -305,14 +330,14 @@ class MfManager:
 
     t1.TIT_CHART_ACC = sec.general_ledger
     t1.TIT_REU_COD = sec.provider_code
-    t1.TIT_NAT_TIT_COD= sec.nature
-    t1.TIT_MAR_COD = sec.trading_center
+    t1.TIT_NAT_TIT_COD= self.getCodeLebDub(sec.nature, origin)
+    t1.TIT_MAR_COD = self.getCodeLebDub(sec.trading_center, origin)
     t1.TIT_ISIN_COD = sec.isin
     t1.TIT_DESC = sec.symbol
-    t1.TIT_CATEG = sec.category
-    t1.TIT_TRADING_CATEG = sec.trading_category
-    t1.TIT_RATE_LIST = sec.provider_ratelist
-    t1.Tit_Asset_Cod = sec.asset_allocation
+    t1.TIT_CATEG = self.getCodeLebDub(sec.category, origin)
+    t1.TIT_TRADING_CATEG = self.getCodeLebDub(sec.trading_category, origin)
+    t1.TIT_RATE_LIST = self.getCodeLebDub(sec.provider_ratelist, origin)
+    t1.Tit_Asset_Cod = self.getCodeLebDub(sec.asset_allocation, origin)
     t1.TIT_ONLINE_RATE_MULTIPLIER = sec.multiplier_for_online_prices
     t1.TIT_MAR_LN_MC = sec.main_lng_position
     t1.TIT_MAR_SH_MC = sec.main_short_position
