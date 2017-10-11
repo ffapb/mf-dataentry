@@ -111,12 +111,10 @@ class Security(models.Model):
     fixing = models.BooleanField(default=False)
     fix1 = models.CharField(max_length=5)
     fix2 = models.CharField(max_length=5)
-    mar_short_position = models.CharField(max_length=5)
-    mar_lng_position = models.CharField(max_length=5)
-    main_short_position = models.CharField(max_length=5)
-    main_lng_position = models.CharField(max_length=5)
-    
-   
+    mar_short_position = models.FloatField()
+    mar_lng_position = models.FloatField()
+    main_short_position = models.FloatField()
+    main_lng_position = models.FloatField()
    
     
     class Meta:

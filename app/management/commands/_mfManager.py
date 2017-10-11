@@ -262,23 +262,24 @@ class MfManager:
       #t1.TIT_NB_UNITE = 1
       t1.TIT_LST_COD = "None"
 
+      # set increment field that is not "auto" in marketflow database
+      m = "%06.0f" % ( int(self.titreSeqMax()) + 1 )
+      t1.Tit_dep_Ref = m
+      t1.TIT_SEQ = m
+
+
     # set fields
     t1.TIT_NOM = sec.designation
-    t1.TIT_DEV_COD = self.getCodeLebDub(sec.currency)
+    t1.TIT_DEV_COD = self.getCodeLebDub(sec.currency, origin)
     t1.TIT_STY_COD =  sec.subtype
     # wrong? # t1.TIT_CAT_COD = sec.category
-    t1.TIT_NAT_COD = self.getCodeLebDub(sec.nationality)
+    t1.TIT_NAT_COD = self.getCodeLebDub(sec.nationality, origin)
     t1.TIT_PCE_COD = sec.quotation_place
     t1.TIT_DEP_COD = sec.deposit_place
     #t1.TIT_LST_COD = sec.ratelist
     t1.TIT_FIXING = 1 if sec.fixing else 0
     t1.TIT_FIX_1 = sec.fix1
     t1.TIT_FIX_2 = sec.fix2
-
-    # set increment field that is not "auto" in marketflow database
-    m = "%06.0f" % ( int(self.titreSeqMax()) + 1 )
-    t1.Tit_dep_Ref = m
-    t1.TIT_SEQ = m
 
     t1.TIT_CHART_ACC = sec.general_ledger
     t1.TIT_REU_COD = sec.provider_code
