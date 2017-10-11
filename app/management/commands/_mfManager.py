@@ -267,11 +267,33 @@ class MfManager:
       t1.Tit_dep_Ref = m
       t1.TIT_SEQ = m
 
+      # asset-type-specific fields
+      t1.TIT_FUTUR = 0
+      t1.TIT_OPTIONS = 0
+      t1.TIT_BOND = 0
+      t1.TIT_STRIKE = 0
+      t1.TIT_UNDERLYING = 0
+      t1.TIT_DAT_MAT = ""
+      t1.TIT_HOLDER = ""
+      t1.TIT_SHOW = 0
+      t1.TIT_FIRST_NOTICE_DAT = ""
+      t1.TIT_NB_UNITE = 1
+      t1.TIT_MAR = 0
+      t1.TIT_FORWARD = 0
+      t1.TIT_PIP_VALUE = 0
+      t1.TIT_TTG_COD = 0
+      t1.TIT_MONITOR_TYPE = 0
+      t1.TIT_OCCUPE = 0
+
+      # some more
+      t1.TIT_MAR_LN = 0
+      t1.TIT_MAR_SH = 0
+
 
     # set fields
     t1.TIT_NOM = sec.designation
     t1.TIT_DEV_COD = self.getCodeLebDub(sec.currency, origin)
-    t1.TIT_STY_COD =  sec.subtype
+    t1.TIT_STY_COD =  self.getCodeLebDub(sec.subtype, origin)
     # wrong? # t1.TIT_CAT_COD = sec.category
     t1.TIT_NAT_COD = self.getCodeLebDub(sec.nationality, origin)
     t1.TIT_PCE_COD = sec.quotation_place
@@ -297,24 +319,6 @@ class MfManager:
     t1.TIT_MAR_LN = sec.mar_lng_position
     t1.TIT_MAR_SH = sec.mar_short_position
     #t1.TIT_MONITOR_TYPE = sec.monitoring_type
-
-    # asset-type-specific fields
-    t1.TIT_FUTUR = 0
-    t1.TIT_OPTIONS = 0
-    t1.TIT_BOND = 0
-    t1.TIT_STRIKE = 0
-    t1.TIT_UNDERLYING = 0
-    t1.TIT_DAT_MAT = ""
-    t1.TIT_HOLDER = ""
-    t1.TIT_SHOW = 0
-    t1.TIT_FIRST_NOTICE_DAT = ""
-    t1.TIT_NB_UNITE = 1
-    t1.TIT_MAR = 0
-    t1.TIT_FORWARD = 0
-    t1.TIT_PIP_VALUE = 0
-    t1.TIT_TTG_COD = 0
-    t1.TIT_MONITOR_TYPE = 0
-    t1.TIT_OCCUPE = 0
 
     if sec.__class__.__name__=="SecurityShare":
       t1.TIT_TYP_TIT_COD = 1
@@ -352,6 +356,7 @@ class MfManager:
       t1.TIT_SHOW = 1 if sec.show else 0
       t1.TIT_OCCUPE= '-1'
       t1.TIT_DIV_CHART = 8904
+
     # add and commit
     if found.count()==0:
       s.add(t1)
