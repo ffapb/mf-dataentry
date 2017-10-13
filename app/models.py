@@ -149,7 +149,7 @@ class Security(models.Model):
       both = yaml.load(open(fn,'r'))
       for base, credentials in both.items():
         with MfManager( host=credentials['host'], port=credentials['port'], user=credentials['user'], password=credentials['password'], db=credentials['db']) as mfMan:
-          mfMan.insertSecurity(self, 'MF Dubai')
+          mfMan.insertSecurity(self, 'MF Lebanon')
          # mfMan.insertSecurity(self, 'MF Dubai')
          
 

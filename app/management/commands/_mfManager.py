@@ -5,6 +5,7 @@ from sqlalchemy.orm import sessionmaker
 
 class MfManager:
   def __init__(self, host: str=None, port: str=None, user: str=None, password: str=None, db:str=None):
+    
     self.server   = host      #or "localhost"
     self.port     = port        #or "6200"
     self.user     = user     #or "root"
