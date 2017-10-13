@@ -5,8 +5,8 @@ from .management.commands._mfManager import MfManager
 import yaml
 import os
 class MappableModel(models.Model):
-    code_leb = models.CharField(max_length=2,  unique=True, null=True, blank=True)
-    code_dub = models.CharField(max_length=2,  unique=True, null=True, blank=True)
+    code_leb = models.CharField(max_length=10,  unique=True, null=True, blank=True)
+    code_dub = models.CharField(max_length=10,  unique=True, null=True, blank=True)
     name     = models.CharField(max_length=100, unique=True)
     def __str__(self):
         return self.name
@@ -85,17 +85,17 @@ class TradingCenter(MappableModel):
     class Meta:
       ordering = ('name', 'code_leb', 'code_dub', )
 
-class DepositPlace(MappableModel):
-    code_leb = models.CharField(max_length=10,  unique=True, null=True, blank=True)
-    code_dub = models.CharField(max_length=10,  unique=True, null=True, blank=True)
-    class Meta:
-      ordering = ('name', 'code_leb', 'code_dub', )
+#class DepositPlace(MappableModel):
+#    code_leb = models.CharField(max_length=10,  unique=True, null=True, blank=True)
+#    code_dub = models.CharField(max_length=10,  unique=True, null=True, blank=True)
+#    class Meta:
+#      ordering = ('name', 'code_leb', 'code_dub', )
 
 class Security(models.Model):
-    code = models.CharField(max_length=20, unique=True)
-    circular = models.CharField(max_length=200)
+    code = models.CharField(max_length=10, unique=True)
+    circular = models.CharField(max_length=4)
     designation = models.CharField(max_length=100)
-    symbol = models.CharField(max_length=100)
+    symbol = models.CharField(max_length=10)
     currency = models.ForeignKey(Currency)
     subtype = models.ForeignKey(Subtype)
     category = models.ForeignKey(Category)
@@ -103,9 +103,10 @@ class Security(models.Model):
     nature = models.ForeignKey(Nature)
     trading_center = models.ForeignKey(TradingCenter)
     nationality = models.ForeignKey(Nationality, null=True, blank=True)
-    deposit_place = models.ForeignKey(DepositPlace)
+    deposit_place = models.CharField(max_length=10)
+    #deposit_place = models.ForeignKey(DepositPlace)
     quotation_place = models.ForeignKey(QuotationPlace)
-    ratelist = models.CharField(max_length=10)
+   # ratelist = models.CharField(max_length=10)
     asset_allocation = models.ForeignKey(AssetAllocation)
     group_for_ledgers = models.CharField(max_length=200)
     general_ledger = models.CharField(max_length=4)
@@ -147,9 +148,10 @@ class Security(models.Model):
       fn=os.path.join(dir_path,"credentials.yml")
       both = yaml.load(open(fn,'r'))
       for base, credentials in both.items():
-        with MfManager(host=credentials['host'], port=credentials['port'], user=credentials['user'], password=credentials['password'], db=credentials['db']) as mfMan:
-          mfMan.insertSecurity(self, credentials['origin'])
-  
+        with MfManager( host=credentials['host'], port=credentials['port'], user=credentials['user'], password=credentials['password'], db=credentials['db']) as mfMan:
+          mfMan.insertSecurity(self, 'MF Lebanon')
+         # mfMan.insertSecurity(self, 'MF Dubai')
+         
 
 #Multi Table Inheritance
 #https://godjango.com/blog/django-abstract-base-class-multi-table-inheritance/   

@@ -16,5 +16,5 @@ admin.site.register(models.Category)
 admin.site.register(models.TradingCategory)
 admin.site.register(models.QuotationPlace)
 admin.site.register(models.TradingCenter)
-admin.site.register(models.DepositPlace)
+#admin.site.register(models.DepositPlace)
 

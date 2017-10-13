@@ -10,7 +10,7 @@ class MfManager:
     self.user     = user     #or "root"
     self.password = password # or ""
     self.db = db 
-   
+    
   # get MF names
   # http://pymssql.org/en/stable/pymssql_examples.html
   def __enter__(self):
@@ -228,28 +228,28 @@ class MfManager:
       return cursor
 
 
-  def depositplaceCount(self):
-      cursor = self._execute("""
-        SELECT
-        count(*) as dp
-        FROM CLIENT_ENTITY
-       
-        where CLIENT_ENTITY.ENT_TYPE='4'
-                                                                   
-     """)
-      res = cursor.fetchall()
-      return res[0]['dp']
-
-  def depositplaceList(self):
-      cursor = self._execute("""
-        SELECT  ENT_COD,ENT_FULL_NAME
-                                                         
-        FROM CLIENT_ENTITY
-               
-        where CLIENT_ENTITY.ENT_TYPE='4'
-                                                                                                                      
-      """)
-      return cursor
+#  def depositplaceCount(self):
+#      cursor = self._execute("""
+#        SELECT
+#        count(*) as dp
+#        FROM CLIENT_ENTITY
+#       
+#        where CLIENT_ENTITY.ENT_TYPE='4'
+#                                                                   
+#     """)
+#      res = cursor.fetchall()
+#      return res[0]['dp']
+#
+#  def depositplaceList(self):
+#      cursor = self._execute("""
+#        SELECT  ENT_COD,ENT_FULL_NAME
+#                                                         
+#        FROM CLIENT_ENTITY
+#               
+#        where CLIENT_ENTITY.ENT_TYPE='4'
+#                                                                                                                      
+#      """)
+#      return cursor
 
 
   def getCodeLebDub(self, x, origin):
@@ -285,10 +285,10 @@ class MfManager:
       #t1.TIT_MONITOR_TYPE = 0
       #t1.TIT_TTG_COD = 0
       #t1.TIT_NB_UNITE = 1
-      t1.TIT_LST_COD = "None"
+      t1.TIT_LST_COD = 0
 
       # set increment field that is not "auto" in marketflow database
-      m = "%06.0f" % ( int(self.titreSeqMax()) + 1 )
+      m = "%06.0f" % ( int(self.titreSeqMax()) +1 )
       t1.Tit_dep_Ref = m
       t1.TIT_SEQ = m
 
@@ -321,8 +321,9 @@ class MfManager:
     t1.TIT_STY_COD =  self.getCodeLebDub(sec.subtype, origin)
     # wrong? # t1.TIT_CAT_COD = sec.category
     t1.TIT_NAT_COD = self.getCodeLebDub(sec.nationality, origin)
-    t1.TIT_PCE_COD = self.getCodeLebDub(sec.uottaion_place, origin)
-    t1.TIT_DEP_COD = self.getCodeLebDub(sec.deposit_place, origin)
+    t1.TIT_PCE_COD = self.getCodeLebDub(sec.quotation_place, origin)
+   # t1.TIT_DEP_COD = self.getCodeLebDub(sec.deposit_place, origin)
+    t1.TIT_DEP_COD=sec.deposit_place
     #t1.TIT_LST_COD = sec.ratelist
     t1.TIT_FIXING = 1 if sec.fixing else 0
     t1.TIT_FIX_1 = sec.fix1
@@ -350,6 +351,7 @@ class MfManager:
       t1.TIT_HOLDER = 1 if sec.shareholder_number else 0
       t1.TIT_SHOW = 1 if sec.show else 0
       t1.TIT_DIV_CHART = 4211
+      t1.TIT_OCCUPE = -1
 
     if sec.__class__.__name__=="SecurityOption":
       t1.TIT_OPTIONS = 1 
