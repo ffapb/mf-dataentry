@@ -227,7 +227,6 @@ class MfManager:
      """)
       return cursor
 
-
 #  def depositplaceCount(self):
 #      cursor = self._execute("""
 #        SELECT
@@ -250,7 +249,7 @@ class MfManager:
 #                                                                                                                      
 #      """)
 #      return cursor
-
+#
 
   def getCodeLebDub(self, x, origin):
     return x.code_leb if origin=="MF Lebanon" else x.code_dub
@@ -275,7 +274,7 @@ class MfManager:
 
       # set defaults required
       t1.TIT_O_MOD_COD = 0
-      t1.TIT_CATEG = ""
+      t1.TIT_CAT_COD = 0
       t1.TIT_TRADING_CATEG = ""
       t1.TIT_RATE_LIST = 1
       t1.Tit_Asset_Cod = ""
@@ -319,10 +318,10 @@ class MfManager:
     t1.TIT_NOM = sec.designation
     t1.TIT_DEV_COD = self.getCodeLebDub(sec.currency, origin)
     t1.TIT_STY_COD =  self.getCodeLebDub(sec.subtype, origin)
-    # wrong? # t1.TIT_CAT_COD = sec.category
+    t1.TIT_CATEG = self.getCodeLebDub(sec.category, origin)
     t1.TIT_NAT_COD = self.getCodeLebDub(sec.nationality, origin)
     t1.TIT_PCE_COD = self.getCodeLebDub(sec.quotation_place, origin)
-   # t1.TIT_DEP_COD = self.getCodeLebDub(sec.deposit_place, origin)
+    #t1.TIT_DEP_COD = self.getCodeLebDub(sec.deposit_place, origin)
     t1.TIT_DEP_COD=sec.deposit_place
     #t1.TIT_LST_COD = sec.ratelist
     t1.TIT_FIXING = 1 if sec.fixing else 0

@@ -86,8 +86,8 @@ class TradingCenter(MappableModel):
       ordering = ('name', 'code_leb', 'code_dub', )
 
 #class DepositPlace(MappableModel):
-#    code_leb = models.CharField(max_length=10,  unique=True, null=True, blank=True)
-#    code_dub = models.CharField(max_length=10,  unique=True, null=True, blank=True)
+#    code_leb = models.CharField(max_length=6,  unique=True, null=True, blank=True)
+#    code_dub = models.CharField(max_length=6,  unique=True, null=True, blank=True)
 #    class Meta:
 #      ordering = ('name', 'code_leb', 'code_dub', )
 
@@ -149,7 +149,7 @@ class Security(models.Model):
       both = yaml.load(open(fn,'r'))
       for base, credentials in both.items():
         with MfManager( host=credentials['host'], port=credentials['port'], user=credentials['user'], password=credentials['password'], db=credentials['db']) as mfMan:
-          mfMan.insertSecurity(self, 'MF Lebanon')
+          mfMan.insertSecurity(self, 'MF Dubai')
          # mfMan.insertSecurity(self, 'MF Dubai')
          
 
