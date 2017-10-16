@@ -91,6 +91,15 @@ class TradingCenter(MappableModel):
 #    class Meta:
 #      ordering = ('name', 'code_leb', 'code_dub', )
 
+
+# http://stackoverflow.com/questions/24192748/ddg#24192847
+def getshape(d):
+    if isinstance(d, dict):
+        return {k:getshape(d[k]) for k in d}
+    else:
+        # Replace all non-dict values with None.
+        return None
+
 class Security(models.Model):
     code = models.CharField(max_length=10, unique=True)
     circular = models.CharField(max_length=4)
@@ -145,12 +154,19 @@ class Security(models.Model):
 
       super(Security,self).save( *args, **options)
       dir_path = os.path.dirname(os.path.realpath(__file__))
-      fn=os.path.join(dir_path,"credentials.yml")
-      both = yaml.load(open(fn,'r'))
+      fn1=os.path.join(dir_path,"credentials.yml")
+      both = yaml.load(open(fn1,'r'))
+
+      # check that format is matching with credentials.yml.dist format
+      fn2=os.path.join(dir_path,"credentials.yml.dist")
+      expected = yaml.load(open(fn2,'r'))
+      if getshape(both) != getshape(expected):
+        raise Exception("credentials.yml does not match with credentials.yml.dist")
+
+      # iterate
       for base, credentials in both.items():
         with MfManager( host=credentials['host'], port=credentials['port'], user=credentials['user'], password=credentials['password'], db=credentials['db']) as mfMan:
-          mfMan.insertSecurity(self, 'MF Lebanon')
-         # mfMan.insertSecurity(self, 'MF Dubai')
+          mfMan.insertSecurity(self, credentials['origin'])
          
 
 #Multi Table Inheritance
