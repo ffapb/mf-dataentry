@@ -8,10 +8,17 @@ class MappableModel(models.Model):
     code_leb = models.CharField(max_length=10,  unique=True, null=True, blank=True)
     code_dub = models.CharField(max_length=10,  unique=True, null=True, blank=True)
     name     = models.CharField(max_length=100, unique=True)
-    def __str__(self):
-        return self.name
     class Meta:
       abstract = True
+    def __str__(self):
+      codes = [
+        "LB" if self.code_leb is not None else None,
+        "AE" if self.code_dub is not None else None,
+      ]
+      codes = [c for c in codes if c is not None]
+      if len(codes)>0: codes = " (" + ", ".join(codes) + ")"
+      else: codes = ""
+      return self.name + codes
 
     # https://stackoverflow.com/a/15534514/4126114
     def save(self, *args, **kwargs):
@@ -25,72 +32,48 @@ class Currency(MappableModel):
       ordering = ('name', 'code_leb', 'code_dub', )
 
 class Nationality(MappableModel):
-    code_leb = models.CharField(max_length=10,  unique=True, null=True, blank=True)
-    code_dub = models.CharField(max_length=10,  unique=True, null=True, blank=True)
     class Meta:
       verbose_name_plural = "nationalities"
-
       ordering = ('name', 'code_leb', 'code_dub', )
 
 
 
 class Subtype(MappableModel):
-    code_leb = models.CharField(max_length=10,  unique=True, null=True, blank=True)
-    code_dub = models.CharField(max_length=10,  unique=True, null=True, blank=True)
     class Meta:
-      verbose_name_plural = "subtypes"
-
       ordering = ('name', 'code_leb', 'code_dub', )
 
 
 class RateListProvider(MappableModel):
-    code_leb = models.CharField(max_length=10,  unique=True, null=True, blank=True)
-    code_dub = models.CharField(max_length=10,  unique=True, null=True, blank=True)
     class Meta:
       ordering = ('name', 'code_leb', 'code_dub', )
 
 class Nature(MappableModel):
-    code_leb = models.CharField(max_length=10,  unique=True, null=True, blank=True)
-    code_dub = models.CharField(max_length=10,  unique=True, null=True, blank=True)
     class Meta:
       ordering = ('name', 'code_leb', 'code_dub', )
 
 class AssetAllocation(MappableModel):
-    code_leb = models.CharField(max_length=10,  unique=True, null=True, blank=True)
-    code_dub = models.CharField(max_length=10,  unique=True, null=True, blank=True)
     class Meta:
       ordering = ('name', 'code_leb', 'code_dub', )
 
 class Category(MappableModel):
-    code_leb = models.CharField(max_length=10,  unique=True, null=True, blank=True)
-    code_dub = models.CharField(max_length=10,  unique=True, null=True, blank=True)
     class Meta:
       ordering = ('name', 'code_leb', 'code_dub', )
 
 class TradingCategory(MappableModel):
-    code_leb = models.CharField(max_length=10,  unique=True, null=True, blank=True)
-    code_dub = models.CharField(max_length=10,  unique=True, null=True, blank=True)
     class Meta:
       ordering = ('name', 'code_leb', 'code_dub', )
 
 class QuotationPlace(MappableModel):
-    code_leb = models.CharField(max_length=10,  unique=True, null=True, blank=True)
-    code_dub = models.CharField(max_length=10,  unique=True, null=True, blank=True)
     class Meta:
       ordering = ('name', 'code_leb', 'code_dub', )
 
 class TradingCenter(MappableModel):
-    code_leb = models.CharField(max_length=10,  unique=True, null=True, blank=True)
-    code_dub = models.CharField(max_length=10,  unique=True, null=True, blank=True)
     class Meta:
       ordering = ('name', 'code_leb', 'code_dub', )
 
-#class DepositPlace(MappableModel):
-#    code_leb = models.CharField(max_length=6,  unique=True, null=True, blank=True)
-#    code_dub = models.CharField(max_length=6,  unique=True, null=True, blank=True)
-#    class Meta:
-#      ordering = ('name', 'code_leb', 'code_dub', )
-
+class DepositPlace(MappableModel):
+    class Meta:
+      ordering = ('name', 'code_leb', 'code_dub', )
 
 # http://stackoverflow.com/questions/24192748/ddg#24192847
 def getshape(d):
@@ -112,8 +95,8 @@ class Security(models.Model):
     nature = models.ForeignKey(Nature)
     trading_center = models.ForeignKey(TradingCenter)
     nationality = models.ForeignKey(Nationality, null=True, blank=True)
-    deposit_place = models.CharField(max_length=10)
-    #deposit_place = models.ForeignKey(DepositPlace)
+    #deposit_place = models.CharField(max_length=10)
+    deposit_place = models.ForeignKey(DepositPlace)
     quotation_place = models.ForeignKey(QuotationPlace)
    # ratelist = models.CharField(max_length=10)
     asset_allocation = models.ForeignKey(AssetAllocation)

@@ -13,11 +13,11 @@ logger = logging.getLogger('MF data entry')
 class Command(BaseCommand):
   help = """Usage:
          python manage.py importMarketflow --help
-         python manage.py importMarketflow --debug
+         python manage.py importMarketflow --silent
          """
 
   def add_arguments(self, parser):
-    parser.add_argument('--debug',   action='store_true', dest='debug',                   help='show higher verbosity',                           default=False)
+    parser.add_argument('--silent',   action='store_true', dest='silent',                   help='show no verbosity',                           default=False)
     parser.add_argument('--host',    action='store',      dest='host',     required=True, help='ms sql server for marketflow: host IP or name')
     parser.add_argument('--port',    action='store',      dest='port',     required=True, help='ms sql server for marketflow: port number')
     parser.add_argument('--user',    action='store',      dest='user',     required=True, help='ms sql server for marketflow: username')
@@ -119,7 +119,7 @@ class Command(BaseCommand):
   def _handle_depositplace(self, mfMan):
       total = mfMan.depositplaceCount()
       listGenerator =  mfMan.depositplaceList()
-      self._handle_core(total, listGenerator, 'ENT_COD', 'ENT_FULL_NAME', DepositPlace)
+      self._handle_core(total, listGenerator, 'DEP_COD', 'ENT_FULL_NAME', DepositPlace)
 
 
 
@@ -127,13 +127,14 @@ class Command(BaseCommand):
   def handle(self, *args, **options):
     h1 = logging.StreamHandler(stream=self.stderr)
     logger.addHandler(h1)
-    if options['debug']:
+    self.debug = ~options['silent']
+
+    if self.debug:
       logger.setLevel(logging.DEBUG)
 
     if options['origin'] not in ('MF Lebanon', 'MF Dubai'):
       raise Exception("Invalid origin found. Please use: 'MF Lebanon' or 'MF Dubai'")
 
-    self.debug = options['debug']
     self.origin = options['origin']
 
     with MfManager(host=options['host'], port=options['port'], user=options['user'], password=options['password'], db=options['db']) as mfMan:

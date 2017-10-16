@@ -228,32 +228,34 @@ class MfManager:
      """)
       return cursor
 
-#  def depositplaceCount(self):
-#      cursor = self._execute("""
-#        SELECT
-#        count(*) as dp
-#        FROM CLIENT_ENTITY
-#       
-#        where CLIENT_ENTITY.ENT_TYPE='4'
-#                                                                   
-#     """)
-#      res = cursor.fetchall()
-#      return res[0]['dp']
-#
-#  def depositplaceList(self):
-#      cursor = self._execute("""
+  def depositplaceCount(self):
+      cursor = self._execute("""
+        SELECT distinct
+        count(*) as dp
+        FROM STOCKDEPOSITAIRE
+     """)
+      res = cursor.fetchall()
+      return res[0]['dp']
+
+  def depositplaceList(self):
+      cursor = self._execute("""
+        select distinct DEP_COD, ENT_FULL_NAME
+        from STOCKDEPOSITAIRE
+        left join CLIENT on STOCKDEPOSITAIRE.DEP_COD = CLIENT.CLI_COD
+        left join CLIENT_ENTITY on CLIENT.CLI_ENT_COD = CLIENT_ENTITY.ENT_COD
+      """)
+        
 #        SELECT  ENT_COD,ENT_FULL_NAME
-#                                                         
 #        FROM CLIENT_ENTITY
-#               
 #        where CLIENT_ENTITY.ENT_TYPE='4'
-#                                                                                                                      
-#      """)
-#      return cursor
-#
+
+      return cursor
+
 
   def getCodeLebDub(self, x, origin):
-    return x.code_leb if origin=="MF Lebanon" else x.code_dub
+    code = x.code_leb if origin=="MF Lebanon" else x.code_dub
+    if code is None: raise Exception("Cannot save to "+origin+" because missing code for "+x.__class__.__name__+": "+x.name)
+    return code
  
   def insertSecurity(self, sec, origin):
     url = 'mssql+pymssql://'+self.user+':'+self.password+'@'+self.server+':'+str(self.port)+'/'+self.db
@@ -266,9 +268,10 @@ class MfManager:
 
     # check if security already exists
     found = s.query(TITRE).filter(TITRE.TIT_COD==sec.code)
-    if found.count()>0:
-      if found.count()>1:
-        raise Exception("Found %s rows for code %s"%(found.count(),sec.code))
+    found_count = found.count()
+    if found_count > 0:
+      if found_count > 1:
+        raise Exception("Found %s rows for code %s"%(found_count,sec.code))
       t1 = found.one() # will raise error if more than one found
     else:
       t1 = TITRE(TIT_COD=sec.code)
@@ -322,8 +325,8 @@ class MfManager:
     t1.TIT_CATEG = self.getCodeLebDub(sec.category, origin)
     t1.TIT_NAT_COD = self.getCodeLebDub(sec.nationality, origin)
     t1.TIT_PCE_COD = self.getCodeLebDub(sec.quotation_place, origin)
-    #t1.TIT_DEP_COD = self.getCodeLebDub(sec.deposit_place, origin)
-    t1.TIT_DEP_COD=sec.deposit_place
+    t1.TIT_DEP_COD = self.getCodeLebDub(sec.deposit_place, origin)
+    # t1.TIT_DEP_COD=sec.deposit_place
     #t1.TIT_LST_COD = sec.ratelist
     t1.TIT_FIXING = 1 if sec.fixing else 0
     t1.TIT_FIX_1 = sec.fix1
@@ -385,7 +388,7 @@ class MfManager:
       t1.TIT_DIV_CHART = 8904
 
     # add and commit
-    if found.count()==0:
+    if found_count==0:
       s.add(t1)
 
     s.commit()
