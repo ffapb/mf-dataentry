@@ -25,3 +25,7 @@ The file `app/management/command/titre.py` is the sqlalchemy ORM file
 exported from the marketflow database using [sqlacodegen](https://pypi.python.org/pypi/sqlacodegen) as such:
 
     > sqlacodegen --tables TITRE --outfile titre.py mssql+pymssql://user:pass@ip:port/db
+
+# Testing
+
+    ./manage.py test app.tests

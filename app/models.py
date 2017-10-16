@@ -57,6 +57,7 @@ class AssetAllocation(MappableModel):
 
 class Category(MappableModel):
     class Meta:
+      verbose_name_plural = "categories"
       ordering = ('name', 'code_leb', 'code_dub', )
 
 class TradingCategory(MappableModel):
