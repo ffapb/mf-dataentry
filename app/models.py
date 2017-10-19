@@ -124,14 +124,14 @@ class Security(models.Model):
        return self.code
 
     def checkAllDropdownsOnBothLebDub(self):
-      if self.currency.code_leb=='':
-        raise Exception("Missing currency in leb")
-      if self.currency.code_dub=='':
-        raise Exception("Missing currency in dub")
-      if self.nationality.code_leb=='':
-        raise Exception("Missing nationality in leb")
-      if self.nationality.code_dub=='':
-        raise Exception("Missing nationality in dub")
+      if self.currency.code_leb=='' or self.currency.code_leb is None:
+        raise ValueError("Missing currency in leb")
+      if self.currency.code_dub=='' or self.currency.code_dub is None:
+        raise ValueError("Missing currency in dub")
+      if self.nationality.code_leb=='' or self.nationality.code_leb is None:
+        raise ValueError("Missing nationality in leb")
+      if self.nationality.code_dub=='' or self.nationality.code_dub is None:
+        raise ValueError("Missing nationality in dub")
 
     def save(self, *args, **options):
       self.checkAllDropdownsOnBothLebDub()
