@@ -1,5 +1,6 @@
 #Lunch django server
 # ATM using the dev built-in server .. will move later to nginx maybe
+
 pew in mf_dataentry python manage.py migrate
 
 # Running createsuperuser should be done manually by the admin upon docker-compose up for example

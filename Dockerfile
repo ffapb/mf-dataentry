@@ -5,6 +5,7 @@ FROM python:alpine
 RUN apk --update add git gcc musl-dev g++ freetds-dev
 RUN pip3 install pew
 
+
 # -i arguments copied from requirements.txt
 # Reason for not using the requirements.txt is that in Dockerfile
 # after a COPY, layers are not cached
