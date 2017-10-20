@@ -132,6 +132,43 @@ class Security(models.Model):
         raise ValueError("Missing nationality in leb")
       if self.nationality.code_dub=='' or self.nationality.code_dub is None:
         raise ValueError("Missing nationality in dub")
+      if self.subtype.code_leb=='' or self.subtype.code_leb is None:
+        raise ValueError("Missing subtype in leb")
+      if self.subtype.code_dub=='' or self.subtype.code_dub is None:
+        raise ValueError("Missing subtype in dub")
+      if self.category.code_leb=='' or self.category.code_leb is None:
+        raise ValueError("Missing category in leb")
+      if self.category.code_dub=='' or self.category.code_dub is None:
+        raise ValueError("Missing category in dub")
+      if self.trading_category.code_leb=='' or self.trading_category.code_leb is None:
+        raise ValueError("Missing trading category in leb")
+      if self.trading_category.code_dub=='' or self.trading_category.code_dub is None:
+        raise ValueError("Missing trading category in dub")
+      if self.nature.code_leb=='' or self.nature.code_leb is None:
+        raise ValueError("Missing nature in leb")
+      if self.nature.code_dub=='' or self.nature.code_dub is None:
+        raise ValueError("Missing nature in dub")
+      if self.trading_center.code_leb=='' or self.trading_center.code_leb is None:
+        raise ValueError("Missing trading_center in leb")
+      if self.trading_center.code_dub=='' or self.trading_center.code_dub is None:
+        raise ValueError("Missing trading_center in dub")
+      if self.deposit_place.code_leb=='' or self.deposit_place.code_leb is None:
+        raise ValueError("Missing deposit_place in leb")
+      if self.deposit_place.code_dub=='' or self.deposit_place.code_dub is None:
+        raise ValueError("Missing deposit_place in dub")
+      if self.quotation_place.code_leb=='' or self.quotation_place.code_leb is None:
+        raise ValueError("Missing quotation_place in leb")
+      if self.quotation_place.code_dub=='' or self.quotation_place.code_dub is None:
+        raise ValueError("Missing quotation_place in dub")
+      if self.asset_allocation.code_leb=='' or self.asset_allocation.code_leb is None:
+        raise ValueError("Missing asset allocation in leb")
+      if self.asset_allocation.code_dub=='' or self.asset_allocation.code_dub is None:
+        raise ValueError("Missing asset_allocation in dub")
+      if self.provider_ratelist.code_leb=='' or self.provider_ratelist.code_leb is None:
+        raise ValueError("Missing provider_ratelist in leb")
+      if self.provider_ratelist.code_dub=='' or self.provider_ratelist.code_dub is None:
+        raise ValueError("Missing provider_ratelist in dub")
+
 
     def save(self, *args, **options):
       self.checkAllDropdownsOnBothLebDub()
