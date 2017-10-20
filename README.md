@@ -9,7 +9,7 @@ pew new mf_dataentry
 # for more info about pymssql check ffapb/ffa-blotter requirement.txt
 pip install django progressbar33 git+https://github.com/pymssql/pymssql.git
 pip install pip PyYAML
-+pip install Flask-SQLAlchemy
+pip install sqlalchemy
 
 ```
 
@@ -29,3 +29,12 @@ exported from the marketflow database using [sqlacodegen](https://pypi.python.or
 # Testing
 
     ./manage.py test app.tests
+
+
+# Docker
+
+ - Create Dockerfile
+ - Create docker-entry.sh
+ - docker build . -t teamshadi/mf-dataentry:testMin
+ - docker run -it -p 8008:8008 -v $PWD/db.sqlite3:/var/lib/mf_dataery/db.sqlite3 teamshadi/mf-dataentry:testMin
+ 

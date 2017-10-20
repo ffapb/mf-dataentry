@@ -1,4 +1,4 @@
-COPY FROM minerva22/mf-dataentry:Dockerfile
+#COPY FROM minerva22/mf-dataentry:Dockerfile
 
 # to test: > docker run -it --entrypoint /bin/sh python:alpine
 FROM python:alpine
@@ -13,12 +13,9 @@ RUN pew new \
   --python=python3 \
   -d \
   -i Django==1.10.5 \
-  -i django-bootstrap3==8.1.0 \
-  -i django-pagination-bootstrap==1.2 \
-  -i Django-Select2==5.8.10 \
   -i progressbar33==2.4 \
-  -i Flask-SQLAlchemy
- 
+  -i PyYAML \
+  -i sqlalchemy \
   mf_dataentry
 
 # This takes so long, just doing it on a new line
