@@ -1,6 +1,6 @@
 import logging
 from ._mfManager import MfManager
-from ...models import Currency, Nationality, Subtype, RateListProvider,Nature, AssetAllocation, Category , TradingCategory , QuotationPlace , TradingCenter, DepositPlace
+from ...models import Currency, Nationality, Subtype, RateListProvider,Nature, AssetAllocation, Category , TradingCategory , QuotationPlace , TradingCenter, DepositPlace,Titre
 
 
 # https://docs.djangoproject.com/en/1.10/howto/custom-management-commands/
@@ -120,6 +120,11 @@ class Command(BaseCommand):
       total = mfMan.depositplaceCount()
       listGenerator =  mfMan.depositplaceList()
       self._handle_core(total, listGenerator, 'DEP_COD', 'ENT_FULL_NAME', DepositPlace)
+   
+  def _handle_titre(self, mfMan):
+      total = mfMan.titreCount()
+      listGenerator =  mfMan.titreList()
+      self._handle_core(total, listGenerator, 'TIT_COD', 'TIT_NOM', Titre)
 
 
 
@@ -138,14 +143,15 @@ class Command(BaseCommand):
     self.origin = options['origin']
 
     with MfManager(host=options['host'], port=options['port'], user=options['user'], password=options['password'], db=options['db']) as mfMan:
-      self._handle_currency(mfMan)
-      self._handle_nationality(mfMan)
-      self._handle_subtype(mfMan)
-      self._handle_ratelistprovider(mfMan)
-      self._handle_nature(mfMan)
-      self._handle_assetallocation(mfMan)
-      self._handle_category(mfMan)
-      self._handle_tradingcategory(mfMan)
-      self._handle_quotationplace(mfMan)
-      self._handle_tradingcenter(mfMan)
-      self._handle_depositplace(mfMan)
+     # self._handle_currency(mfMan)
+      #self._handle_nationality(mfMan)
+      #self._handle_subtype(mfMan)
+      #self._handle_ratelistprovider(mfMan)
+     # self._handle_nature(mfMan)
+     # self._handle_assetallocation(mfMan)
+      #self._handle_category(mfMan)
+      #self._handle_tradingcategory(mfMan)
+     # self._handle_quotationplace(mfMan)
+     # self._handle_tradingcenter(mfMan)
+      #self._handle_depositplace(mfMan)
+      self._handle_titre(mfMan)

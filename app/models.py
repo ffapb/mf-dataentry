@@ -31,6 +31,7 @@ class Currency(MappableModel):
       verbose_name_plural = "currencies"
       ordering = ('name', 'code_leb', 'code_dub', )
 
+
 class Nationality(MappableModel):
     class Meta:
       verbose_name_plural = "nationalities"
@@ -76,6 +77,10 @@ class DepositPlace(MappableModel):
     class Meta:
       ordering = ('name', 'code_leb', 'code_dub', )
 
+class Titre(MappableModel):
+    class Meta:
+      ordering = ('name', 'code_leb', 'code_dub', )
+                
 # http://stackoverflow.com/questions/24192748/ddg#24192847
 def getshape(d):
     if isinstance(d, dict):
@@ -115,7 +120,7 @@ class Security(models.Model):
     mar_lng_position = models.FloatField()
     main_short_position = models.FloatField()
     main_lng_position = models.FloatField()
-   
+    bloomberg_code = models.CharField(max_length=10, default=None,null=True,blank=True)   
     
     class Meta:
       abstract = True
@@ -170,7 +175,9 @@ class Security(models.Model):
         raise ValueError("Missing provider_ratelist in dub")
 
 
+
     def save(self, *args, **options):
+      
       self.checkAllDropdownsOnBothLebDub()
 
       super(Security,self).save( *args, **options)
@@ -187,7 +194,10 @@ class Security(models.Model):
       # iterate
       for base, credentials in both.items():
         with MfManager( host=credentials['host'], port=credentials['port'], user=credentials['user'], password=credentials['password'], db=credentials['db']) as mfMan:
-          mfMan.insertSecurity(self, credentials['origin'])
+          
+           
+          
+            mfMan.insertSecurity(self, credentials['origin'])
          
 
 #Multi Table Inheritance

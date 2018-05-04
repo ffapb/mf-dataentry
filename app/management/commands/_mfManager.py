@@ -252,6 +252,25 @@ class MfManager:
       return cursor
 
 
+  def titreCount(self):
+      cursor = self._execute("""
+        SELECT distinct
+        count(*) as t
+        FROM TITRE
+      """)
+      res = cursor.fetchall()
+      return res[0]['t']
+
+
+  def titreList(self):
+      cursor = self._execute("""
+        SELECT TIT_COD, TIT_NOM                          
+        FROM TITRE                                                                    """)
+      return cursor
+
+
+
+
   def getCodeLebDub(self, x, origin):
     code = x.code_leb if origin=="MF Lebanon" else x.code_dub
     if code is None: raise Exception("Cannot save to "+origin+" because missing code for "+x.__class__.__name__+": "+x.name)
