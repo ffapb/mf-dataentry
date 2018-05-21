@@ -1,5 +1,5 @@
 from __future__ import unicode_literals
-#from django.conf import settings
+from django.conf import settings
 from django.db import models
 from .management.commands._mfManager import MfManager
 import yaml
@@ -196,9 +196,15 @@ class Security(models.Model):
         with MfManager( host=credentials['host'], port=credentials['port'], user=credentials['user'], password=credentials['password'], db=credentials['db']) as mfMan:
           
            
-          
-            mfMan.insertSecurity(self, credentials['origin'])
-         
+            if settings.DISABLE_EXPORT_TO_MF:
+              return
+               
+            
+                        
+              return  mfMan.insertSecurity(self, credentials['origin'])
+            
+            
+               
 
 #Multi Table Inheritance
 #https://godjango.com/blog/django-abstract-base-class-multi-table-inheritance/   
