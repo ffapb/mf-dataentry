@@ -94,22 +94,22 @@ class Security(models.Model):
     circular = models.CharField(max_length=4)
     designation = models.CharField(max_length=100)
     symbol = models.CharField(max_length=10)
-    currency = models.ForeignKey(Currency)
-    subtype = models.ForeignKey(Subtype)
-    category = models.ForeignKey(Category)
-    trading_category = models.ForeignKey(TradingCategory)
-    nature = models.ForeignKey(Nature)
-    trading_center = models.ForeignKey(TradingCenter)
-    nationality = models.ForeignKey(Nationality, null=True, blank=True)
+    currency = models.ForeignKey(Currency, on_delete=models.DO_NOTHING)
+    subtype = models.ForeignKey(Subtype, on_delete=models.DO_NOTHING)
+    category = models.ForeignKey(Category, on_delete=models.DO_NOTHING)
+    trading_category = models.ForeignKey(TradingCategory, on_delete=models.DO_NOTHING)
+    nature = models.ForeignKey(Nature, on_delete=models.DO_NOTHING)
+    trading_center = models.ForeignKey(TradingCenter, on_delete=models.DO_NOTHING)
+    nationality = models.ForeignKey(Nationality, null=True, blank=True, on_delete=models.DO_NOTHING)
     #deposit_place = models.CharField(max_length=10)
-    deposit_place = models.ForeignKey(DepositPlace)
-    quotation_place = models.ForeignKey(QuotationPlace)
+    deposit_place = models.ForeignKey(DepositPlace, on_delete=models.DO_NOTHING)
+    quotation_place = models.ForeignKey(QuotationPlace, on_delete=models.DO_NOTHING)
    # ratelist = models.CharField(max_length=10)
-    asset_allocation = models.ForeignKey(AssetAllocation)
+    asset_allocation = models.ForeignKey(AssetAllocation, on_delete=models.DO_NOTHING)
     group_for_ledgers = models.CharField(max_length=200)
     general_ledger = models.CharField(max_length=4)
     provider_code = models.CharField(max_length=50)
-    provider_ratelist = models.ForeignKey(RateListProvider)
+    provider_ratelist = models.ForeignKey(RateListProvider, on_delete=models.DO_NOTHING)
    # monitoring_type = models.IntegerField()
     multiplier_for_online_prices = models.IntegerField()
     isin = models.CharField(max_length=20)
@@ -177,9 +177,12 @@ class Security(models.Model):
 
 
     def save(self, *args, **options):
-      
       self.checkAllDropdownsOnBothLebDub()
 
+      if settings.DISABLE_EXPORT_TO_MF:
+        return
+ 
+      # prepare to export to MF
       super(Security,self).save( *args, **options)
       dir_path = os.path.dirname(os.path.realpath(__file__))
       fn1=os.path.join(dir_path,"credentials.yml")
@@ -193,15 +196,14 @@ class Security(models.Model):
 
       # iterate
       for base, credentials in both.items():
-        with MfManager( host=credentials['host'], port=credentials['port'], user=credentials['user'], password=credentials['password'], db=credentials['db']) as mfMan:
-          
-           
-            if settings.DISABLE_EXPORT_TO_MF:
-              return
-               
-            
-                        
-              return  mfMan.insertSecurity(self, credentials['origin'])
+        with MfManager(
+            host=credentials['host'],
+            port=credentials['port'],
+            user=credentials['user'],
+            password=credentials['password'],
+            db=credentials['db']
+          ) as mfMan:
+          mfMan.insertSecurity(self, credentials['origin'])
             
             
                
