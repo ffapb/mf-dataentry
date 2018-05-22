@@ -121,7 +121,9 @@ class Security(models.Model):
     main_short_position = models.FloatField()
     main_lng_position = models.FloatField()
     bloomberg_code = models.CharField(max_length=10, default=None,null=True,blank=True)   
+    is_dividend_futures = models.BooleanField(default=False)
     
+         
     class Meta:
       abstract = True
 
